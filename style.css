@@ -1,0 +1,13 @@
+/*  */
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* classes */
+.user-input-display{
+width: 600px;
+height: 200px;
+font-size: 32px;
+}
