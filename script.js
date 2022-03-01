@@ -9,9 +9,9 @@ userInputField.addEventListener('click', e => {
 //Limit the users input to just numbers without using type = "Number". That breaks the event listeners for the userInputField
 function checkUserKey(event){
     let char = event.keyCode;
-    if(char > 31 && (char < 48 || char > 57)){
-        return false;
+    if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173){
+        return true;
     }
-    return true;
+    return false;
 }
 //Allow other input values as well, such as "+" or "()"
