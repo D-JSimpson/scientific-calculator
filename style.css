@@ -1,8 +1,19 @@
 /*  */
 body{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+#user-input-display-container{
+display: flex;
+flex-direction: column;
+height:600px;
+overflow-y:scroll;
+scrollbar-color: grey white;
+}
+#user-input-display-container > :first-child{
+    margin-top: auto;
 }
 
 /* classes */
@@ -10,4 +21,6 @@ body{
 width: 600px;
 height: 200px;
 font-size: 32px;
+flex-shrink: 0;
+
 }
