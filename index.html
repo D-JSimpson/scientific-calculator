@@ -10,9 +10,69 @@
 </head>
 
 <body>
-    <div id = "user-input-display-container">
-    <input class="user-input-display" onkeydown="return checkUserKey(event)">
+    <label class="light-dark">
+        <input type="checkbox">
+        <span class="slider round"></span>
+    </label>
+
+    <div id="user-interface">
+        <div id = "user-input-display-container">
+            <input class="user-input-display" id="first-input">
+        </div>
+
+        <div id="user-input">
+            <div id ="function-container">
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+                <button class="functions">ph</button>
+            </div>
+
+            <div id="numbers-container">
+                <button class="numbers">7</button>
+                <button class="numbers">8</button>
+                <button class="numbers">9</button>
+                <button class="numbers">4</button>
+                <button class="numbers">5</button>
+                <button class="numbers">6</button>
+                <button class="numbers">1</button>
+                <button class="numbers">2</button>
+                <button class="numbers">3</button>
+                <button class="numbers">0</button>
+                <button class="numbers">.</button>
+                <button class="numbers">ans</button>
+                
+            </div>
+
+            <div id="operations-container">
+                <button class = "operations">/</button>
+                <button class = "operations">-</button>
+                <button class = "operations">+</button>
+                <button class = "operations">x</button>
+            </div>
+
+            <div id="misc-container">
+                <div id="misc-percent-division-container">
+                    <button class="misc-v1">%</button>
+                    <button class="misc-v1">a/b</button>
+                </div>
+                <div id="misc-arrow-container">
+                    <button class="misc-v2">arr1</button>
+                    <button class="misc-v2">arr2</button>
+                </div>
+                <button id="back-button">back</button>
+                <button id="enter-button">enter</button>
+            </div>
+        </div>
     </div>
-    <button>enter</button>
+    
 </body>
 </html>
