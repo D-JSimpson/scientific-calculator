@@ -1,6 +1,6 @@
 const userInputDisplayContainer = document.getElementById("user-input-display-container");
 
-const userInputField = document.querySelector('input');
+const userInputField = document.getElementById('first-input');
 userInputField.addEventListener('keyup', e => {
     let currentPosition = e.target.selectionStart;
  console.log("the cursor is at: ", currentPosition);
@@ -9,9 +9,10 @@ userInputField.addEventListener('click', e => {
     let currentPosition = e.target.selectionStart;
     console.log("the cursor is at: ", currentPosition);
 });
+userInputField.onkeydown = function(event){return checkUserKey(event)};
 
 //placeholder button for enter. When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
-const btn = document.querySelector('button');
+const btn = document.getElementById('enter-button');
 btn.addEventListener('click', function(){
 let userInputField = document.createElement('input');
 
