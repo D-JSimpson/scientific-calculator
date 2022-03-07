@@ -93,13 +93,20 @@ border: 1px solid rgb(173, 173, 173);
   color: black;
   border: none;
 }
+#user-input-display-container input:focus{
+  border-top: none;
+}
 
 /* classes */
 .user-input-display{
 height: 18%;
 font-size: 24px;
 flex-shrink: 0;
-
+border: none;
+border-top: 1px solid rgb(173, 173, 173);
+}
+.user-input-display:focus{
+  border: 1px solid #2196F3;
 }
 .numbers, 
 .functions{
@@ -132,6 +139,34 @@ font-family: 'Shippori Antique B1', sans-serif;
 .enter{
   background-color: #2196F3;
 }
+.nth-root{
+font-size: 75%;
+display: inline-block;
+margin-left: -0.5em;
+transform: translateX(0.6em) translateY(-1em);
+}
+.nth-power-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.nth-power{
+  align-self: flex-start;
+  padding-top: 0.3em;
+  margin-left: -0.1em;
+}
+.division-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+}
+.division-top{
+  border-bottom: 2px solid black;
+  width: 40%;
+}
+/*hover and press classes*/
 .d-hover{
   background-color: rgb(149,149,149);
 }

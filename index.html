@@ -7,6 +7,7 @@
     <title>Scientific Calculator</title>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/24703e049c.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -19,21 +20,30 @@
         <div id = "user-input-display-container">
             <input class="user-input-display" id="first-input">
         </div>
-
+        
         <div id="user-input">
             <div id ="function-container">
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
-                <button class="functions light-button">ph</button>
+                <button class="functions light-button">a&#0178;</button>
+                <button class="functions light-button">
+                    <span class="nth-power-container">
+                        <span>
+                            a
+                        </span>
+                        <span class="nth-power">
+                            b
+                        </span>
+                    </span>
+                </button>
+                <button class="functions light-button">|a|</button>
+                <button class="functions light-button">&radic;</button>
+                <button class="functions light-button"><span class="nth-root">n</span>&radic;</button>
+                <button class="functions light-button">&pi;</button>
+                <button class="functions light-button">sin</button>
+                <button class="functions light-button">cos</button>
+                <button class="functions light-button">tan</button>
+                <button class="functions light-button">(</button>
+                <button class="functions light-button">)</button>
+                <button class="functions light-button">,</button>
             </div>
 
             <div id="numbers-container">
@@ -53,23 +63,34 @@
             </div>
 
             <div id="operations-container">
-                <button class = "operations light-button">/</button>
+                <button class = "operations light-button">&#0247;</button>
+                <button class = "operations light-button">x</button>
                 <button class = "operations light-button">-</button>
                 <button class = "operations light-button">+</button>
-                <button class = "operations light-button">x</button>
             </div>
 
             <div id="misc-container">
                 <div id="misc-percent-division-container">
                     <button class="misc-v1 light-button">%</button>
-                    <button class="misc-v1 light-button">a/b</button>
+                    <button class="misc-v1 light-button">
+                      <span class = "division-container">
+                        <span class="division-top">
+                            a
+                        </span>
+
+                        <span>
+                            b
+                        </span>
+
+                        </button>
+                      </span>
                 </div>
                 <div id="misc-arrow-container">
-                    <button class="misc-v2 dark-button">arr1</button>
-                    <button class="misc-v2 dark-button">arr2</button>
+                    <button class="misc-v2 dark-button">&larr;</button>
+                    <button class="misc-v2 dark-button">&rarr;</button>
                 </div>
-                <button id="back-button" class="back">back</button>
-                <button id="enter-button" class="enter">enter</button>
+                <button id="back-button" class="back"><i class="fa-solid fa-delete-left"></i></button>
+                <button id="enter-button" class="enter">&#x21B5;</button>
             </div>
         </div>
     </div>

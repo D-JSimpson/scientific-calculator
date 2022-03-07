@@ -90,6 +90,7 @@ window.addEventListener("mouseup", function(){
     });
 });
 
+//Toggle class when the user enters and leaves the BACK button to create a hover effect
 const backButton = document.getElementById("back-button");
 backButton.addEventListener('mouseenter', bb => {
     bb.target.classList.toggle("d-hover");
@@ -97,6 +98,7 @@ backButton.addEventListener('mouseenter', bb => {
 backButton.addEventListener('mouseleave', bb => {
     bb.target.classList.toggle("d-hover");
 });
+//Toggle class when the user presses down on a button
 backButton.addEventListener('mousedown', bb => {
     bb.target.classList.toggle("d-pressed");
 });
@@ -109,13 +111,14 @@ window.addEventListener("mouseup", function(){
             backButton.classList.toggle("d-pressed");
         }
 });
-
+//Toggle class when the user enters and leaves the ENTER button to create a hover effect
 enterButton.addEventListener('mouseenter', eb => {
     eb.target.classList.toggle("e-hover");
 });
 enterButton.addEventListener('mouseleave', eb => {
     eb.target.classList.toggle("e-hover");
 });
+//Toggle class when the user presses down on a button
 enterButton.addEventListener('mousedown', eb => {
     eb.target.classList.toggle("e-pressed");
 });
@@ -132,6 +135,9 @@ window.addEventListener("mouseup", function(){
 //Limit the users input to just dbbers without using type = "DBber". That breaks the event listeners for the userInputField
 function checkUserKey(event){
     let char = event.keyCode;
+    console.log(event);
+    console.log(char);
+    console.log(keyCode(54));
     if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173 || char == 191){
         return true;
     }
