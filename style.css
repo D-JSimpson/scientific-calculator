@@ -1,4 +1,6 @@
-/*  */
+/* font-family: 'Shippori Antique B1', sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&display=swap');
+
 body{
     display: flex;
     flex-direction: column;
@@ -34,6 +36,8 @@ border: 1px solid rgb(173, 173, 173);
     justify-content: space-between;
     background-color: rgb(236, 236, 236);
     align-items: flex-end;
+    padding: 5px;
+    box-sizing: border-box;
 }
 #function-container{
     display: flex;
@@ -74,10 +78,20 @@ border: 1px solid rgb(173, 173, 173);
   display: flex;
   justify-content: space-around;
   height: 20%;
+  
 }
 #back-button, 
 #enter-button{
   height: 20%;
+  font-family: 'Shippori Antique B1', sans-serif;
+}
+#back-button{
+  width: 75%;
+  align-self: flex-end;
+}
+#enter-button{
+  color: black;
+  border: none;
 }
 
 /* classes */
@@ -91,6 +105,20 @@ flex-shrink: 0;
 .functions{
     width: 31%;
     height: 20%;
+    font-family: 'Shippori Antique B1', sans-serif;
+    
+}
+.numbers,
+.misc-v2,
+.back{
+  background-color: rgb(160,160,160);
+  border: 1px solid rgb(101,101,101);
+}
+.functions, 
+.operations,
+.misc-v1{
+  background-color: #FFFAFA;
+  border: 1px solid antiquewhite;
 }
 .operations{
   width: auto;
@@ -99,8 +127,29 @@ flex-shrink: 0;
 .misc-v1,
 .misc-v2{
 width: 47%;
+font-family: 'Shippori Antique B1', sans-serif;
 }
-
+.enter{
+  background-color: #2196F3;
+}
+.d-hover{
+  background-color: rgb(149,149,149);
+}
+.d-pressed{
+  background-color: rgb(128,128,128);
+}
+.l-hover{
+  background-color: rgb(245, 240, 240);
+}
+.l-pressed{
+  background-color: rgb(225, 220, 220);
+}
+.e-hover{
+  background-color: rgb(49, 140, 231);
+}
+.e-pressed{
+  background-color: rgb(29, 120, 211);
+}
 /*light/dark mode slider */
 .light-dark {
     position: relative;
