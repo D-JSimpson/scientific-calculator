@@ -36,6 +36,8 @@ userInputField.addEventListener('click', e => {
  userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
 });
 
+//** Start of hover and press effects **//
+
 //Toggle class when the user enters and leaves a DARK button to create a hover effect
 const darkButton = document.querySelectorAll(".dark-button");
 darkButton.forEach( (db) =>{
@@ -131,8 +133,9 @@ window.addEventListener("mouseup", function(){
             enterButton.classList.toggle("e-pressed");
         }
 });
+//** End of hover and press effects **//
 
-//Limit the users input to just dbbers without using type = "DBber". That breaks the event listeners for the userInputField
+//Limit the users input to just numbers without using type = "number". That breaks the event listeners for the userInputField
 function checkUserKey(event){
     let char = event.keyCode;
     console.log(event);
