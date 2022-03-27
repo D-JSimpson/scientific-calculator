@@ -2,16 +2,139 @@ const userInputDisplayContainer = document.getElementById("user-input-display-co
 const body = document.querySelector("body");
 const userInput = document.getElementById("user-input");
 
-const userInputField = document.getElementById('first-input');
-userInputField.addEventListener('keyup', e => {
-    let currentPosition = e.target.selectionStart;
- console.log("the cursor is at: ", currentPosition);
+let currentSelection;
+const divInputToo = document.getElementById("div-input-too");
+let textArea = document.getElementById("text-area");
+const expressionContainer = document.getElementById("expression-container");
+let keepCursorPosition = false;
+
+
+divInputToo.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
+divInputToo.addEventListener("click", function(){cursorInBetween()});
+
+//controls the cursor when it is inbetween elements
+function cursorInBetween(){
+    const expressionChildren = expressionContainer.childNodes;                                                                                          
+    if(expressionChildren.length == 1){updateCursor();} //When the field is empty
+    else{
+        let place = getPositionElement();
+            updateCursor(place);
+        
+    }
+}
+
+//gets the element the user is hovering over and returns that element
+function getPositionElement(){
+    const positionGrab = Array.from(document.querySelectorAll( ":hover" ));
+    console.log(positionGrab);
+    const expressionChildren = expressionContainer.childNodes;
+    let lastChildIndex=expressionChildren.length - 1;
+    const lastChild = expressionChildren[lastChildIndex];
+    let pos = positionGrab.length - 1;
+    const place = positionGrab[pos];
+    if(place == lastChild){
+        keepCursorPosition = false;
+    } else{keepCursorPosition = true;}
+    if(pos !== 4)return place;
+    
+
+}
+function cursorBlink(){
+    const cursor = document.querySelector("#cursor");
+    setInterval(cursorBlinkTime, 1000, cursor);
+}
+function cursorBlinkTime(c){
+    
+    setTimeout( () =>{c.classList.toggle("cursor")}, 500);
+}
+function cursorToStart(){
+    const expressionChildren = expressionContainer.childNodes;
+    let firstChild = expressionChildren[0];
+    firstChild.insertAdjacentHTML("beforebegin", "<span id='cursor' class='cursor'></span>");
+
+}
+let removeFluff = true;
+function updateCursor(pos){
+    const expressionChildren = expressionContainer.childNodes;
+    if(removeFluff == true)
+    {
+        expressionChildren[0].remove();
+        removeFluff = false;
+    }
+    
+     expressionChildren.forEach( (exp)=>{
+          if(exp.id == "cursor"){
+              expressionContainer.removeChild(exp);
+          }
+         
+      });
+   if(pos == undefined){
+    expressionContainer.innerHTML += "<span id='cursor' class='cursor'></span>";
+   }else if(pos.id == "span-input"){
+        cursorToStart();
+   }
+   else{
+      pos.insertAdjacentHTML("afterend", "<span id='cursor' class='cursor'></span>");
+   }
+    cursorBlink();
+}
+function backSpace(){
+    const expressionChildren = expressionContainer.childNodes;
+    let index;
+    expressionChildren.forEach( (exp, ind)=>{
+        if(exp.id == "cursor"){
+            index = ind-1;
+        }
+       
+    });
+    let exp = expressionChildren[index];
+    if(index >= 0) expressionContainer.removeChild(exp);
+}
+function insertAtCursor(key){
+    const expressionChildren = expressionContainer.childNodes; //selects expression container for now, but will be changed to match current selection accordingly
+    
+    for(i=0; i< expressionChildren.length; i++){
+        let exp = expressionChildren[i];
+        if(exp.id == "cursor"){
+            exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
+            break;
+        }
+    }
+}
+body.addEventListener("keydown", function(event){
+    
+    if(checkUserKey(event)){
+        if(event.key == "Backspace"){
+            backSpace();
+        }else{
+            insertAtCursor(event.key);
+            if(keepCursorPosition == false)
+            {
+            updateCursor();
+            }
+        }
+    }
 });
-userInputField.addEventListener('click', e => {
-    let currentPosition = e.target.selectionStart;
-    console.log("the cursor is at: ", currentPosition);
-});
-userInputField.onkeydown = function(event){return checkUserKey(event)};
+
+
+//the display field will track the users position with the field
+// const userInputField = document.getElementById('first-input');
+// let currentInputField;
+// userInputField.addEventListener('keyup', e => {
+//     let currentPosition = e.target.selectionStart;
+//  console.log("the cursor is at: ", currentPosition);
+// });
+// userInputField.addEventListener('click', e => {
+//     let currentPosition = e.target.selectionStart;
+//     console.log("the cursor is at: ", currentPosition);
+// });
+// userInputField.addEventListener("focusin", e =>{
+//     currentInputField = e.target;
+// });
+// userInputField.addEventListener("focusout", e =>{
+//     currentInputField = undefined;
+// });
+// userInputField.onkeydown = function(event){return checkUserKey(event)};
 
 //placeholder button for enter. When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
@@ -28,6 +151,12 @@ let userInputField = document.createElement('input');
 userInputField.addEventListener('click', e => {
     let currentPosition = e.target.selectionStart;
     console.log("the cursor is at: ", currentPosition);
+});
+userInputField.addEventListener("focusin", e =>{
+    currentInputField = e.target;
+});
+userInputField.addEventListener("focusout", e =>{
+    currentInputField = undefined;
 });
 
  userInputField.onkeydown = function(event){return checkUserKey(event)};
@@ -138,9 +267,6 @@ window.addEventListener("mouseup", function(){
 //Limit the users input to just numbers without using type = "number". That breaks the event listeners for the userInputField
 function checkUserKey(event){
     let char = event.keyCode;
-    console.log(event);
-    console.log(char);
-    console.log(keyCode(54));
     if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173 || char == 191){
         return true;
     }

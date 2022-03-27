@@ -8,6 +8,12 @@ body{
     align-items: center;
     height: 100vh;
 }
+textarea{
+  resize: none;
+  overflow-x: hidden;overflow-y: hidden;
+  box-sizing: border-box;
+
+}
 /*I'Ds*/
 #user-interface{
     width: 40vw;
@@ -38,6 +44,22 @@ border: 1px solid rgb(173, 173, 173);
     align-items: flex-end;
     padding: 5px;
     box-sizing: border-box;
+}
+#div-input-too{
+  display: flex;
+}
+#span-input{
+  height: 100%;
+  width: 15px;
+}
+#span-input textarea{
+  width: 0;
+  padding: 0;
+}
+#expression-container{
+  display: flex;
+  align-items: center;
+height: 100%;
 }
 #function-container{
     display: flex;
@@ -96,6 +118,10 @@ border: 1px solid rgb(173, 173, 173);
 #user-input-display-container input:focus{
   border-top: none;
 }
+#cursor{
+  height: 40%;
+  flex-grow: 0;
+}
 
 /* classes */
 .user-input-display{
@@ -135,6 +161,7 @@ border-top: 1px solid rgb(173, 173, 173);
 .misc-v2{
 width: 47%;
 font-family: 'Shippori Antique B1', sans-serif;
+padding-top: 0;
 }
 .enter{
   background-color: #2196F3;
@@ -161,6 +188,7 @@ transform: translateX(0.6em) translateY(-1em);
   flex-direction: column;
   align-items: center;
   justify-self: center;
+  font-size: 85%;
 }
 .division-top{
   border-bottom: 2px solid black;
@@ -184,6 +212,16 @@ transform: translateX(0.6em) translateY(-1em);
 }
 .e-pressed{
   background-color: rgb(29, 120, 211);
+}
+.cursor{
+  border-left: 2px solid black;
+}
+.digit{
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding-top: auto;
+  padding-bottom: auto;
 }
 /*light/dark mode slider */
 .light-dark {
