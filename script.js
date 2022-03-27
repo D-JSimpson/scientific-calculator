@@ -3,14 +3,15 @@ const body = document.querySelector("body");
 const userInput = document.getElementById("user-input");
 
 let currentSelection;
-const divInputToo = document.getElementById("div-input-too");
+let blinkIntervalID;
+const firstDivInput = document.getElementById("first-div-input");
 let textArea = document.getElementById("text-area");
 const expressionContainer = document.getElementById("expression-container");
 let keepCursorPosition = false;
 
 
-divInputToo.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
-divInputToo.addEventListener("click", function(){cursorInBetween()});
+firstDivInput.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
+firstDivInput.addEventListener("click", function(){cursorInBetween(); firstDivInput.classList.add("display-border")});
 
 //controls the cursor when it is inbetween elements
 function cursorInBetween(){
@@ -41,7 +42,7 @@ function getPositionElement(){
 }
 function cursorBlink(){
     const cursor = document.querySelector("#cursor");
-    setInterval(cursorBlinkTime, 1000, cursor);
+    blinkIntervalID = setInterval(cursorBlinkTime, 1000, cursor);
 }
 function cursorBlinkTime(c){
     
@@ -70,7 +71,7 @@ function updateCursor(pos){
       });
    if(pos == undefined){
     expressionContainer.innerHTML += "<span id='cursor' class='cursor'></span>";
-   }else if(pos.id == "span-input"){
+   }else if(pos.classList[0]  == "span-input"){
         cursorToStart();
    }
    else{
@@ -89,6 +90,8 @@ function backSpace(){
     });
     let exp = expressionChildren[index];
     if(index >= 0) expressionContainer.removeChild(exp);
+    clearInterval(blinkIntervalID);
+    cursorBlink();
 }
 function insertAtCursor(key){
     const expressionChildren = expressionContainer.childNodes; //selects expression container for now, but will be changed to match current selection accordingly
@@ -100,6 +103,8 @@ function insertAtCursor(key){
             break;
         }
     }
+    clearInterval(blinkIntervalID);
+    cursorBlink();
 }
 body.addEventListener("keydown", function(event){
     
@@ -164,6 +169,18 @@ userInputField.addEventListener("focusout", e =>{
  userInputDisplayContainer.appendChild(userInputField);
  userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
 });
+function createInputField(){
+    let div = document.createElement("div");
+    div.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
+    div.addEventListener("click", function(){cursorInBetween(); div.classList.add("display-border")});
+    div.classList.add("div-input-too");
+    let startSpan = document.createElement("span");
+    startSpan.innerHTML = "<textarea style='border: none' id='text-area'></textarea>";
+    startSpan.classList.add("span-input");
+    let expressionSpan = document.createElement("span");
+    div.classList.add("user-input-display");
+    userInputDisplayContainer
+}
 
 //** Start of hover and press effects **//
 

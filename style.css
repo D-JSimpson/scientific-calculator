@@ -45,14 +45,17 @@ border: 1px solid rgb(173, 173, 173);
     padding: 5px;
     box-sizing: border-box;
 }
-#div-input-too{
+.div-input-too{
   display: flex;
 }
-#span-input{
+#first-div-input{
+  display: flex;
+}
+.span-input{
   height: 100%;
   width: 15px;
 }
-#span-input textarea{
+textarea{
   width: 0;
   padding: 0;
 }
@@ -119,8 +122,10 @@ height: 100%;
   border-top: none;
 }
 #cursor{
+  width:2px;
   height: 40%;
   flex-grow: 0;
+  box-sizing: border-box;
 }
 
 /* classes */
@@ -133,6 +138,9 @@ border-top: 1px solid rgb(173, 173, 173);
 }
 .user-input-display:focus{
   border: 1px solid #2196F3;
+}
+.display-border{
+  border:2px solid #2196F3;
 }
 .numbers, 
 .functions{
