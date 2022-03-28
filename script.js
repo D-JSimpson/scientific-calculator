@@ -82,17 +82,18 @@ function getPositionElement(){
 
 }
 function cursorBlink(){
-    const cursor = document.querySelector("#cursor");
+    const cursor = document.querySelector(".cursor");
+    if(cursor.classList[1] !== "blink")cursor.classList.toggle("blink");
     blinkIntervalID = setInterval(cursorBlinkTime, 1000, cursor);
 }
 function cursorBlinkTime(c){
     
-    setTimeout( () =>{c.classList.toggle("cursor")}, 500);
+    setTimeout( () =>{c.classList.toggle("blink")}, 500);
 }
 function cursorToStart(){
     const expressionChildren = currentSelection.childNodes;
     let firstChild = expressionChildren[0];
-    firstChild.insertAdjacentHTML("beforebegin", "<span id='cursor' class='cursor'></span>");
+    firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
 }
 let removeFluff = true;
@@ -105,18 +106,18 @@ function updateCursor(pos){
     }
     
      expressionChildren.forEach( (exp)=>{
-          if(exp.id == "cursor"){
+          if(exp.classList[0] == "cursor"){
               currentSelection.removeChild(exp);
           }
          
       });
    if(pos == undefined){
-    currentSelection.innerHTML += "<span id='cursor' class='cursor'></span>";
+    currentSelection.innerHTML += "<span class='cursor blink'></span>";
    }else if(pos.classList[0]  == "span-input"){
         cursorToStart();
    }
    else{
-      pos.insertAdjacentHTML("afterend", "<span id='cursor' class='cursor'></span>");
+      pos.insertAdjacentHTML("afterend", "<span class='cursor blink'></span>");
    }
     cursorBlink();
 }
@@ -124,7 +125,7 @@ function backSpace(){
     const expressionChildren = currentSelection.childNodes;
     let index;
     expressionChildren.forEach( (exp, ind)=>{
-        if(exp.id == "cursor"){
+        if(exp.classList[0]== "cursor"){
             index = ind-1;
         }
        
@@ -135,11 +136,11 @@ function backSpace(){
     cursorBlink();
 }
 function insertAtCursor(key){
-    const expressionChildren = currentSelection.childNodes; //selects expression container for now, but will be changed to match current selection accordingly
+    const expressionChildren = currentSelection.childNodes;
     
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
-        if(exp.id == "cursor"){
+        if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
             break;
         }
@@ -182,7 +183,7 @@ body.addEventListener("keydown", function(event){
 // });
 // userInputField.onkeydown = function(event){return checkUserKey(event)};
 
-//placeholder button for enter. When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
+//When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
 enterButton.addEventListener('click', function(){createInputField();});
 function createInputField(){
@@ -307,7 +308,7 @@ window.addEventListener("mouseup", function(){
 });
 //** End of hover and press effects **//
 
-//Limit the users input to just numbers without using type = "number". That breaks the event listeners for the userInputField
+//Limit the users input to just numbers and some other things
 function checkUserKey(event){
     let char = event.keyCode;
     if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173 || char == 191){

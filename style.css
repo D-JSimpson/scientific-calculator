@@ -121,7 +121,7 @@ textarea{
 #user-input-display-container input:focus{
   border-top: none;
 }
-#cursor{
+.cursor{
   width:2px;
   height: 40%;
   flex-grow: 0;
@@ -221,7 +221,7 @@ transform: translateX(0.6em) translateY(-1em);
 .e-pressed{
   background-color: rgb(29, 120, 211);
 }
-.cursor{
+.blink{
   border-left: 2px solid black;
 }
 .digit{
