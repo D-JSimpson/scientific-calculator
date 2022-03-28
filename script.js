@@ -6,16 +6,57 @@ let currentSelection;
 let blinkIntervalID;
 const firstDivInput = document.getElementById("first-div-input");
 let textArea = document.getElementById("text-area");
-const expressionContainer = document.getElementById("expression-container");
+const epressionContainer = document.getElementById("expression-container");
 let keepCursorPosition = false;
 
 
 firstDivInput.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
-firstDivInput.addEventListener("click", function(){cursorInBetween(); firstDivInput.classList.add("display-border")});
+firstDivInput.addEventListener("click", function(){
+    let children = this.childNodes;
+    currentSelection = children[3];
+    deselectOtherFields();
+    cursorInBetween(); 
+    firstDivInput.classList.add("display-border");
+    
+    
+});
+function deselectOtherFields(){
+    let displayChildren = [];
+    let dCPH = Array.from(userInputDisplayContainer.childNodes);
+    dCPH.forEach( (e) =>{
+        if(e.tagName == "DIV"){
+            displayChildren.push(e);
+        }
+    });
+    let divInputChildren = [];
+    displayChildren.forEach( (e) =>{
+        let dIPH = [];
+        e.childNodes.forEach( (q) =>{
+            if(q.tagName == "SPAN"){
+                dIPH.push(q);
+            }
+        });
+        dIPH.forEach( (el) => {
+            if(el.classList[0] == "expression-container" && el !== currentSelection){ 
+                divInputChildren.push(el);
+            }
+        });
+    });
+    
+    divInputChildren.forEach( (e) =>{
+        e.parentNode.classList.remove("display-border");
+        let children = e.childNodes;
+        children.forEach( (el) =>{
+            if(el.classList[0] == "cursor"){
+                e.removeChild(el);
+            }
+        });
+    });
+};
 
 //controls the cursor when it is inbetween elements
 function cursorInBetween(){
-    const expressionChildren = expressionContainer.childNodes;                                                                                          
+    const expressionChildren = currentSelection.childNodes;                                                                                          
     if(expressionChildren.length == 1){updateCursor();} //When the field is empty
     else{
         let place = getPositionElement();
@@ -28,7 +69,7 @@ function cursorInBetween(){
 function getPositionElement(){
     const positionGrab = Array.from(document.querySelectorAll( ":hover" ));
     console.log(positionGrab);
-    const expressionChildren = expressionContainer.childNodes;
+    const expressionChildren = currentSelection.childNodes;
     let lastChildIndex=expressionChildren.length - 1;
     const lastChild = expressionChildren[lastChildIndex];
     let pos = positionGrab.length - 1;
@@ -49,14 +90,14 @@ function cursorBlinkTime(c){
     setTimeout( () =>{c.classList.toggle("cursor")}, 500);
 }
 function cursorToStart(){
-    const expressionChildren = expressionContainer.childNodes;
+    const expressionChildren = currentSelection.childNodes;
     let firstChild = expressionChildren[0];
     firstChild.insertAdjacentHTML("beforebegin", "<span id='cursor' class='cursor'></span>");
 
 }
 let removeFluff = true;
 function updateCursor(pos){
-    const expressionChildren = expressionContainer.childNodes;
+    const expressionChildren = currentSelection.childNodes;
     if(removeFluff == true)
     {
         expressionChildren[0].remove();
@@ -65,12 +106,12 @@ function updateCursor(pos){
     
      expressionChildren.forEach( (exp)=>{
           if(exp.id == "cursor"){
-              expressionContainer.removeChild(exp);
+              currentSelection.removeChild(exp);
           }
          
       });
    if(pos == undefined){
-    expressionContainer.innerHTML += "<span id='cursor' class='cursor'></span>";
+    currentSelection.innerHTML += "<span id='cursor' class='cursor'></span>";
    }else if(pos.classList[0]  == "span-input"){
         cursorToStart();
    }
@@ -80,7 +121,7 @@ function updateCursor(pos){
     cursorBlink();
 }
 function backSpace(){
-    const expressionChildren = expressionContainer.childNodes;
+    const expressionChildren = currentSelection.childNodes;
     let index;
     expressionChildren.forEach( (exp, ind)=>{
         if(exp.id == "cursor"){
@@ -89,12 +130,12 @@ function backSpace(){
        
     });
     let exp = expressionChildren[index];
-    if(index >= 0) expressionContainer.removeChild(exp);
+    if(index >= 0) currentSelection.removeChild(exp);
     clearInterval(blinkIntervalID);
     cursorBlink();
 }
 function insertAtCursor(key){
-    const expressionChildren = expressionContainer.childNodes; //selects expression container for now, but will be changed to match current selection accordingly
+    const expressionChildren = currentSelection.childNodes; //selects expression container for now, but will be changed to match current selection accordingly
     
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
@@ -143,43 +184,28 @@ body.addEventListener("keydown", function(event){
 
 //placeholder button for enter. When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
-enterButton.addEventListener('click', function(){
-let userInputField = document.createElement('input');
-
- userInputField.classList.add("user-input-display");
-
- userInputField.addEventListener('keyup', e => {
-    let currentPosition = e.target.selectionStart;
- console.log("the cursor is at: ", currentPosition);
-});
-
-userInputField.addEventListener('click', e => {
-    let currentPosition = e.target.selectionStart;
-    console.log("the cursor is at: ", currentPosition);
-});
-userInputField.addEventListener("focusin", e =>{
-    currentInputField = e.target;
-});
-userInputField.addEventListener("focusout", e =>{
-    currentInputField = undefined;
-});
-
- userInputField.onkeydown = function(event){return checkUserKey(event)};
-
- userInputDisplayContainer.appendChild(userInputField);
- userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
-});
+enterButton.addEventListener('click', function(){createInputField();});
 function createInputField(){
     let div = document.createElement("div");
     div.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
-    div.addEventListener("click", function(){cursorInBetween(); div.classList.add("display-border")});
     div.classList.add("div-input-too");
     let startSpan = document.createElement("span");
     startSpan.innerHTML = "<textarea style='border: none' id='text-area'></textarea>";
     startSpan.classList.add("span-input");
     let expressionSpan = document.createElement("span");
+    expressionSpan.classList.add("expression-container");
     div.classList.add("user-input-display");
-    userInputDisplayContainer
+    div.appendChild(startSpan);
+    div.appendChild(expressionSpan);
+    div.addEventListener("click", function(){
+        let children = this.childNodes;
+        currentSelection = children[1];
+        deselectOtherFields();
+        cursorInBetween(); 
+        div.classList.add("display-border")
+    });
+    userInputDisplayContainer.appendChild(div);
+    userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
 }
 
 //** Start of hover and press effects **//
