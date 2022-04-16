@@ -31,6 +31,16 @@ function absValueUpdateCursor(pos){
         let firstChild = children[0];
         containerCursorBlink(firstChild);
     }
+    if(pos.classList[0] == "abs-right")
+    {
+        const parent = pos.parentNode;
+        parent.insertAdjacentHTML("afterend", "<span class='cursor blink'></span>");
+    }
+    if(pos.classList[0] == "abs-left")
+    {
+        const middle = pos.nextElementSibling;
+        middle.insertAdjacentHTML("afterbegin", "<span class='cursor blink'></span>");
+    }
 }
 function containerCursorBlink(cursor){
     const c = cursor;
@@ -50,11 +60,31 @@ function absValueRemoveCursor(element){
 function absValueCursorCheck(element, key){
     const middle = element.childNodes[1];
     const middleChildren = middle.childNodes;
-    for(i=0; i<middleChildren.length; i++){
-        let exp = middleChildren[i];
+    for(j=0; j<middleChildren.length; j++){
+        let exp = middleChildren[j];
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit abs-digit'>" + key + "</span>");
             break;
         }
     }
+}
+function absValueBackspace(element){
+    const middle = element.childNodes[1];
+    const middleChildren = middle.childNodes;
+    if(middleChildren.length == 1){
+        element.insertAdjacentHTML("afterend", "<span class='cursor blink'></span>");
+        currentSelection.removeChild(element);
+        return;
+    }
+    let index;
+    for(i=0; i<middleChildren.length; i++){
+        let e = middleChildren[i];
+        if(e.classList[0] == "cursor"){
+            index = i-1;
+        }
+    }
+    let exp = middleChildren[index];
+    if (index>=0)middle.removeChild(exp);
+    clearInterval(blinkIntervalID);
+    cursorBlink();
 }

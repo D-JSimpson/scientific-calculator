@@ -145,8 +145,17 @@ function backSpace(){
     const expressionChildren = currentSelection.childNodes;
     let index;
     expressionChildren.forEach( (exp, ind)=>{
-        if(exp.classList[0]== "cursor"){
+        let nodeClass = exp.classList[0];
+        
+        if(nodeClass == "cursor"){
             index = ind-1;
+        }
+        switch (nodeClass){
+              case "abs-value-container":
+                  absValueBackspace(exp);
+                  break;
+              default:
+                  break;
         }
        
     });
@@ -156,13 +165,13 @@ function backSpace(){
     cursorBlink();
 }
 function insertAtCursor(key){
-    const expressionChildren = currentSelection.childNodes;
+    const expressionChildren = Array.from(currentSelection.childNodes);
     console.log(expressionChildren);
     
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
         console.log(exp.classList[0]);
-        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); break;}
+        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key);}
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
             break;
