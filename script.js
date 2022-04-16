@@ -109,8 +109,29 @@ function updateCursor(pos){
           if(exp.classList[0] == "cursor"){
               currentSelection.removeChild(exp);
           }
-         
+        switch (exp.classList[0]){
+            case "abs-value-container":
+                absValueRemoveCursor(exp);
+                break;
+            default:
+                break;
+         }
       });
+      let funcBreak = false;
+      //Will call a function to control cursor based on the parent element of what has been click on
+      if(pos !== undefined){
+          let parentNodeClass = pos.parentNode.classList[0];
+          switch (parentNodeClass){
+              case "abs-value-container":
+              case "abs-middle":
+                  absValueUpdateCursor(pos);
+                  funcBreak = true;
+                  break;
+              default:
+                  break;
+          }
+      }
+      if(funcBreak == true)return;
    if(pos == undefined){
     currentSelection.innerHTML += "<span class='cursor blink'></span>";
    }else if(pos.classList[0]  == "span-input"){
@@ -137,9 +158,12 @@ function backSpace(){
 }
 function insertAtCursor(key){
     const expressionChildren = currentSelection.childNodes;
+    console.log(expressionChildren);
     
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
+        console.log(exp.classList[0]);
+        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key);}
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
             break;
