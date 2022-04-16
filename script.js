@@ -123,7 +123,6 @@ function updateCursor(pos){
           let parentNodeClass = pos.parentNode.classList[0];
           switch (parentNodeClass){
               case "abs-value-container":
-              case "abs-middle":
                   absValueUpdateCursor(pos);
                   funcBreak = true;
                   break;
@@ -163,7 +162,7 @@ function insertAtCursor(key){
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
         console.log(exp.classList[0]);
-        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key);}
+        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); break;}
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
             break;
