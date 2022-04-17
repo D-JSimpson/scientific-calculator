@@ -141,6 +141,7 @@ function updateCursor(pos){
    }
     cursorBlink();
 }
+let absBreak = false;
 function backSpace(){
     const expressionChildren = currentSelection.childNodes;
     let index;
@@ -159,6 +160,7 @@ function backSpace(){
         }
        
     });
+    if(absBreak == true){absBreak = false; return};
     let exp = expressionChildren[index];
     if(index >= 0) currentSelection.removeChild(exp);
     clearInterval(blinkIntervalID);
@@ -166,11 +168,11 @@ function backSpace(){
 }
 function insertAtCursor(key){
     const expressionChildren = Array.from(currentSelection.childNodes);
-    console.log(expressionChildren);
+    //console.log(expressionChildren);
     
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
-        console.log(exp.classList[0]);
+       // console.log(exp.classList[0]);
         if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key);}
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
