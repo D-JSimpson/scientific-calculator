@@ -53,11 +53,13 @@ function deselectOtherFields(){
         });
     });
 };
-
 //controls the cursor when it is inbetween elements
 function cursorInBetween(){
-    const expressionChildren = currentSelection.childNodes;                                                                                          
-    if(expressionChildren.length == 1){updateCursor();} //When the field is empty
+    const expressionChildren = currentSelection.childNodes;   
+    if(expressionChildren[0].nodeName == "#text"){
+        expressionChildren[0].remove();
+    }                                                                                       
+    if(expressionChildren.length == 0){updateCursor();} //When the field is empty
     else{
         let place = getPositionElement();
             updateCursor(place);
@@ -96,14 +98,14 @@ function cursorToStart(){
     firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
 }
-let removeFluff = true;
+//let removeFluff = true;
 function updateCursor(pos){
     const expressionChildren = currentSelection.childNodes;
-    if(removeFluff == true)
-    {
-        expressionChildren[0].remove();
-        removeFluff = false;
-    }
+    // if(removeFluff == true)
+    // {
+    //     expressionChildren[0].remove();
+    //     removeFluff = false;
+    // }
     
      expressionChildren.forEach( (exp)=>{
           if(exp.classList[0] == "cursor"){
@@ -173,7 +175,7 @@ function insertAtCursor(key){
     for(i=0; i< expressionChildren.length; i++){
         let exp = expressionChildren[i];
        // console.log(exp.classList[0]);
-        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key);}
+        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); keepCursorPosition = true;}
         if(exp.classList[0] == "cursor"){
             exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
             break;

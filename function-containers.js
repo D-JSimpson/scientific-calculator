@@ -10,23 +10,48 @@ function absValueCreator(){
     absLeft.innerText = "|";
     let absMiddle = document.createElement("span");
     absMiddle.classList.add("abs-middle");
-   // absMiddle.classList.add("abs-middle-grayed");
-   // absMiddle.addEventListener("click", function(){absMiddle.classList.toggle("abs-middle-grayed")});
     let absRight = document.createElement("span");
     absRight.classList.add("abs-right");
-    //absRight.classList.add("abs-right-grayed");
     absRight.innerText = "|";
     absContainer.appendChild(absLeft);
     absContainer.appendChild(absMiddle);
     absContainer.appendChild(absRight);
     const cursor = document.querySelector(".cursor");
-    if(cursor !== null){
-        cursor.insertAdjacentElement("afterend", absContainer);
-        currentSelection.removeChild(cursor);
-        absValueUpdateCursor(absContainer.childNodes[1]);
+    let alreadyThere = absValueThere();
+    if(alreadyThere == false){
+        if(cursor !== null){
+            cursor.insertAdjacentElement("afterend", absContainer);
+            currentSelection.removeChild(cursor);
+            absValueUpdateCursor(absContainer.childNodes[1]);
+        }
     }
 }
-
+function absValueThere(){
+    const cursor = document.querySelector(".cursor");
+    let bool = false;
+    if(cursor !== null){
+        let parent = cursor.parentElement;
+        let parentClass = parent.classList[0]
+        if(parentClass == "abs-middle"){
+            let sibling = parent.nextElementSibling;
+            let siblingClass = sibling.classList[1];
+            let container = parent.parentElement;
+            if(siblingClass == "abs-right-grayed"){
+                let c = document.createElement("span");
+                c.classList.add("cursor");
+                c.classList.add("blink");
+                container.insertAdjacentElement("afterend", c);
+                containerCursorBlink(c);
+                parent.removeChild(cursor);
+                let parentChildren = parent.childNodes;
+                if(parentChildren.length == 0)parent.classList.add("abs-middle-grayed");
+                sibling.classList.remove("abs-right-grayed");
+                bool = true;
+            }
+        }
+    }
+    return bool;
+}
 function absValueUpdateCursor(pos){
     if(pos.classList[0] == "abs-middle")
     {
