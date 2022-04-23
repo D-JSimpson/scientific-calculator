@@ -21,7 +21,7 @@ function absValueCreator(){
     if(alreadyThere == false){
         if(cursor !== null){
             cursor.insertAdjacentElement("afterend", absContainer);
-            currentSelection.removeChild(cursor);
+            currentSelection.removeChild(cursor); //Needs to be able to look into containers
             absValueUpdateCursor(absContainer.childNodes[1]);
         }
     }
@@ -36,7 +36,9 @@ function absValueThere(){
             let sibling = parent.nextElementSibling;
             let siblingClass = sibling.classList[1];
             let container = parent.parentElement;
-            if(siblingClass == "abs-right-grayed"){
+            let middleChildren = parent.childNodes;
+            let lastMiddleChild = middleChildren[middleChildren.length -1];
+            if(siblingClass == "abs-right-grayed" && lastMiddleChild == cursor){
                 let c = document.createElement("span");
                 c.classList.add("cursor");
                 c.classList.add("blink");
@@ -47,6 +49,34 @@ function absValueThere(){
                 if(parentChildren.length == 0)parent.classList.add("abs-middle-grayed");
                 sibling.classList.remove("abs-right-grayed");
                 bool = true;
+            }
+            else if(siblingClass == "abs-right-grayed"){
+                cursorIndex = -1;
+                middleChildren.forEach( (child, index) =>{
+                    if(child.classList[0] == "cursor"){
+                        cursorIndex = index;
+                    }
+                });
+                let childrenArray = [];
+                for(let i = cursorIndex + 1; i < middleChildren.length; i++){
+                    let temp = middleChildren[i];
+                    childrenArray.push(temp);
+                    parent.removeChild(temp);
+                    i--;
+                }
+                for(let i=childrenArray.length - 1; i > -1; i--){
+                    container.insertAdjacentElement("afterend", childrenArray[i])
+                }
+                let c = document.createElement("span");
+                c.classList.add("cursor");
+                c.classList.add("blink");
+                container.insertAdjacentElement("afterend", c);
+                containerCursorBlink(c);
+                parent.removeChild(cursor);
+                sibling.classList.remove("abs-right-grayed");
+                let parentChildren = parent.childNodes;
+                if(parentChildren.length == 0)parent.classList.add("abs-middle-grayed");
+                bool=true;
             }
         }
     }
@@ -107,17 +137,46 @@ function absValueCursorCheck(element, key){
     }
 }
 function absValueBackspace(element){
-    let nextElement = element.nextElementSibling;
+//Outside container
+let nextElement = element.nextElementSibling;
   if(nextElement !== null){
     if(nextElement.classList[0] == "cursor"){
+        let siblingAfter = nextElement.nextElementSibling;
+        if(siblingAfter !== null){
+            let children = currentSelection.childNodes;
+            const middle = element.childNodes[1];
+            cursorIndex = -1;
+                children.forEach( (child, index) =>{
+                    if(child.classList[0] == "cursor"){
+                        cursorIndex = index;
+                    }
+                });
+            let childrenArray = [];
+            for(let i = cursorIndex; i < children.length; i++){
+                let temp = children[i];
+                childrenArray.push(temp);
+                currentSelection.removeChild(temp);
+                i--;
+            }
+            for(let i= 0; i < childrenArray.length; i++){
+                middle.insertAdjacentElement("beforeend", childrenArray[i])
+            }
+            const right = element.childNodes[element.childNodes.length-1];
+            right.classList.add("abs-right-grayed");
+            absBreak = true;
+            return;
+        }
+        else{
         const right = element.childNodes[element.childNodes.length-1];
         right.classList.add("abs-right-grayed");
         currentSelection.removeChild(nextElement);
         absValueUpdateCursorAfterBacksapce(element);
         absBreak = true;
         return;
+        }
     }
   }
+//Inside container
   let hasCursor = false;
     const middle = element.childNodes[1];
     const middleChildren = middle.childNodes;

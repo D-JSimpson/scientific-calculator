@@ -138,6 +138,9 @@ function updateCursor(pos){
    }else if(pos.classList[0]  == "span-input"){
         cursorToStart();
    }
+   else if(pos.classList[0] == "expression-container"){
+    return;
+ }
    else{
       pos.insertAdjacentHTML("afterend", "<span class='cursor blink'></span>");
    }
