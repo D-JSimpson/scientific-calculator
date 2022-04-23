@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <script src="script.js" defer></script>
+    <script src="function-containers.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="function-containers.css">
+    <script src="https://kit.fontawesome.com/24703e049c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <label class="light-dark">
+        <input type="checkbox">
+        <span class="slider round"></span>
+    </label>
+
+    <div id="user-interface">
+        <div id = "user-input-display-container">
+            <div class="user-input-display" id="first-div-input">
+                 <span  class="span-input">
+                    <textarea style="border: none" id="text-area"></textarea>
+                </span> 
+                <span class="expression-container">
+
+                </span>
+            </div>
+        </div>
+        
+        <div id="user-input">
+            <div id ="function-container">
+                <button class="functions light-button">a&#0178;</button>
+                <button class="functions light-button">
+                    <span class="nth-power-container">
+                        <span>
+                            a
+                        </span>
+                        <span class="nth-power">
+                            b
+                        </span>
+                    </span>
+                </button>
+                <button id="abs" class="functions light-button">|a|</button>
+                <button class="functions light-button">&radic;</button>
+                <button class="functions light-button"><span class="nth-root">n</span>&radic;</button>
+                <button class="functions light-button">&pi;</button>
+                <button class="functions light-button">sin</button>
+                <button class="functions light-button">cos</button>
+                <button class="functions light-button">tan</button>
+                <button class="functions light-button">(</button>
+                <button class="functions light-button">)</button>
+                <button class="functions light-button">,</button>
+            </div>
+
+            <div id="numbers-container">
+                <button class="numbers dark-button" value="7" onclick="checkUserInputField(this)">7</button>
+                <button class="numbers dark-button" value="8">8</button>
+                <button class="numbers dark-button" value="9">9</button>
+                <button class="numbers dark-button" value="4">4</button>
+                <button class="numbers dark-button" value="5">5</button>
+                <button class="numbers dark-button" value="6">6</button>
+                <button class="numbers dark-button" value="1">1</button>
+                <button class="numbers dark-button" value="2">2</button>
+                <button class="numbers dark-button" value="3">3</button>
+                <button class="numbers dark-button" value="0">0</button>
+                <button class="numbers dark-button" value=".">.</button>
+                <button id="numbers-function" class="functions light-button">ans</button>
+                
+            </div>
+
+            <div id="operations-container">
+                <button class = "operations light-button" value="/">&#0247;</button>
+                <button class = "operations light-button" value="*">x</button>
+                <button class = "operations light-button" value="-">-</button>
+                <button class = "operations light-button" value="+">+</button>
+            </div>
+
+            <div id="misc-container">
+                <div id="misc-percent-division-container">
+                    <button class="misc-v1 light-button">%</button>
+                    <button class="misc-v1 light-button">
+                      <span class = "division-container">
+                        <span class="division-top">
+                            a
+                        </span>
+
+                        <span>
+                            b
+                        </span>
+
+                        </button>
+                      </span>
+                </div>
+                <div id="misc-arrow-container">
+                    <button class="misc-v2 dark-button">&larr;</button>
+                    <button class="misc-v2 dark-button">&rarr;</button>
+                </div>
+                <button id="back-button" class="back"><i class="fa-solid fa-delete-left"></i></button>
+                <button id="enter-button" class="enter">&#x21B5;</button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

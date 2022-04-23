@@ -1,0 +1,26 @@
+.abs-value-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+.abs-right-grayed{
+    color:rgb(206, 203, 203);
+}
+.abs-left,
+.abs-right{
+    font-size: 150%;
+    /* transform: translateY(-0.1em); */
+}
+.abs-middle{
+    display: flex;
+    min-width: 0.75vw;
+    height: 3vh;
+    flex-grow: 1;
+}
+.abs-middle-grayed{
+    background-color: rgb(206, 203, 203);
+}
+.abs-digit{
+    flex-grow: 0;
+}
