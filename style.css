@@ -123,7 +123,11 @@ textarea{
 }
 .cursor{
   width:2px;
+<<<<<<< HEAD
   height: 30px;
+=======
+  height: 40%;
+>>>>>>> 045cf6ba536116b9cd7c4b1ef52f7a39dc4839a3
   flex-grow: 0;
   box-sizing: border-box;
 }
