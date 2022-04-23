@@ -31,7 +31,18 @@ function absValueThere(){
     let bool = false;
     if(cursor !== null){
         let parent = cursor.parentElement;
-        let parentClass = parent.classList[0]
+        let parentClass = parent.classList[0];
+
+        let previousSibling = cursor.previousElementSibling;
+        if(previousSibling.classList[0] == "abs-value-container"){
+            let children = previousSibling.childNodes;
+            const right = children[children.length-1];
+            let rightClass = right.classList[1];
+            if(rightClass == "abs-right-grayed"){
+                right.classList.remove("abs-right-grayed");
+                bool=true;
+            }
+        }
         if(parentClass == "abs-middle"){
             let sibling = parent.nextElementSibling;
             let siblingClass = sibling.classList[1];
