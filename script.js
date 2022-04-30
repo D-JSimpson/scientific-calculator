@@ -98,27 +98,53 @@ function cursorToStart(){
     firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
 }
-//let removeFluff = true;
+function recursiveCall(e){
+    if(e.classList[0] == "cursor"){
+      return e;
+    }
+    if(e.children.length == 0){
+      return;
+    }
+    for(let r = 0; r< e.children.length; r++){
+      let c = recursiveCall(e.children[r]);
+      if(c !== undefined && c.classList[0] == "cursor"){
+        return c;
+      }
+    }
+  }
+  
+  function getCursor(e){
+    let childrenElements = e.children;
+    for(let i =0; i < childrenElements.length; i++){
+      let child = childrenElements[i];
+      if(child.classList[0] == "cursor")return child;
+      if(child.children.length !== 0){
+        let pos = recursiveCall(child);
+        if(pos !== undefined)return pos;
+      }
+    }
+  
+  }
 function updateCursor(pos){
-    const expressionChildren = currentSelection.childNodes;
-    // if(removeFluff == true)
-    // {
-    //     expressionChildren[0].remove();
-    //     removeFluff = false;
-    // }
-    
-     expressionChildren.forEach( (exp)=>{
-          if(exp.classList[0] == "cursor"){
-              currentSelection.removeChild(exp);
-          }
-        switch (exp.classList[0]){
-            case "abs-value-container":
-                absValueRemoveCursor(exp);
-                break;
-            default:
-                break;
-         }
-      });
+    // const expressionChildren = currentSelection.childNodes;
+    //  expressionChildren.forEach( (exp)=>{
+    //       if(exp.classList[0] == "cursor"){
+    //           currentSelection.removeChild(exp);
+    //       }
+    //     switch (exp.classList[0]){
+    //         case "abs-value-container":
+    //             absValueRemoveCursor(exp);
+    //             break;
+    //         default:
+    //             break;
+    //      }
+    //   });
+    let cursor = getCursor(currentSelection);
+    if(cursor !== undefined){
+        let parent = cursor.parentElement;
+        parent.removeChild(cursor);
+    }
+
       let funcBreak = false;
       //Will call a function to control cursor based on the parent element of what has been click on
       if(pos !== undefined){
@@ -149,41 +175,67 @@ function updateCursor(pos){
 let absBreak = false;
 function backSpace(){
     const expressionChildren = currentSelection.childNodes;
-    let index;
-    expressionChildren.forEach( (exp, ind)=>{
-        let nodeClass = exp.classList[0];
-        
-        if(nodeClass == "cursor"){
-            index = ind-1;
+    let cursor = getCursor(currentSelection);
+    let previous = cursor.previousElementSibling;
+    if(previous !== null){
+        let previousClass = previous.classList[0];
+        switch(previousClass){
+            case "abs-value-container":
+                absValueBackspace(previous, cursor);
+                break;
+            default:
+                break;
         }
-        switch (nodeClass){
-              case "abs-value-container":
-                  absValueBackspace(exp);
+    }
+    if(absBreak == true){absBreak = false; return};
+    let cursorParent = cursor.parentElement;
+    let cursorParentClass = cursorParent.classList[0];
+    switch(cursorParentClass){
+        case "abs-middle":
+                  absValueBackspace(null, cursor);
                   break;
               default:
                   break;
-        }
+    }
+    
+    // let index;
+    // expressionChildren.forEach( (exp, ind)=>{
+    //     let nodeClass = exp.classList[0];
+        
+    //     if(nodeClass == "cursor"){
+    //         index = ind-1;
+    //     }
+    //     switch (nodeClass){
+    //           case "abs-value-container":
+    //               absValueBackspace(exp);
+    //               break;
+    //           default:
+    //               break;
+    //     }
        
-    });
+    // });
     if(absBreak == true){absBreak = false; return};
-    let exp = expressionChildren[index];
-    if(index >= 0) currentSelection.removeChild(exp);
+    //let exp = expressionChildren[index];
+    if(previous == null)return;
+    let parent = previous.parentElement
+    if(previous !== null && parent !== null) parent.removeChild(previous);
     clearInterval(blinkIntervalID);
     cursorBlink();
 }
 function insertAtCursor(key){
     const expressionChildren = Array.from(currentSelection.childNodes);
     //console.log(expressionChildren);
-    
-    for(i=0; i< expressionChildren.length; i++){
-        let exp = expressionChildren[i];
-       // console.log(exp.classList[0]);
-        if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); keepCursorPosition = true;}
-        if(exp.classList[0] == "cursor"){
-            exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
-            break;
-        }
-    }
+    let cursor = getCursor(currentSelection);
+    cursor.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
+    // for(i=0; i< expressionChildren.length; i++){
+    //     let exp = expressionChildren[i];
+    //    // console.log(exp.classList[0]);
+    //     if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); keepCursorPosition = true;}
+    //     if(exp.classList[0] == "cursor"){
+    //         exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
+    //         break;
+    //     }
+    // }
     clearInterval(blinkIntervalID);
     cursorBlink();
 }
@@ -194,10 +246,10 @@ body.addEventListener("keydown", function(event){
             backSpace();
         }else{
             insertAtCursor(event.key);
-            if(keepCursorPosition == false)
-            {
-            updateCursor();
-            }
+            // if(keepCursorPosition == false)
+            // {
+            // updateCursor();
+            // }
         }
     }
 });
