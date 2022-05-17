@@ -11,15 +11,15 @@ let keepCursorPosition = false;
 
 
 firstDivInput.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
-firstDivInput.addEventListener("click", function(){
-    let children = this.childNodes;
+firstDivInput.addEventListener("click", function(){selectField(this)});
+selectField(firstDivInput);
+function selectField(input){
+    let children = input.childNodes;
     currentSelection = children[3];
     deselectOtherFields();
     cursorInBetween(); 
-    firstDivInput.classList.add("display-border");
-    
-    
-});
+    input.classList.add("display-border");
+}
 function deselectOtherFields(){
     let displayChildren = [];
     let dCPH = Array.from(userInputDisplayContainer.childNodes);
@@ -240,7 +240,9 @@ function insertAtCursor(key){
     cursorBlink();
 }
 body.addEventListener("keydown", function(event){
-    
+    if(event.key == "|"){
+        absValueCreator();
+    }
     if(checkUserKey(event)){
         if(event.key == "Backspace"){
             backSpace();
