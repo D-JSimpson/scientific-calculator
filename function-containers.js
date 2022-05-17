@@ -24,10 +24,156 @@ function absValueCreator(){
             let parent = cursor.parentElement;
             getChildren(absContainer);
             cursor.insertAdjacentElement("afterend", absContainer);
-            parent.removeChild(cursor); //Needs to be able to look into containers
+            sizing(absContainer);
+            nestedSizingIncrease(absContainer);
+            parent.removeChild(cursor);
             absValueUpdateCursor(absContainer.childNodes[1]);
         }
     }
+}
+function getBiggestAbs(){
+    let children = currentSelection.children;
+    let style = '24px';
+    for(let i = 0; i<children.length; i++){
+        let child = children[i];
+        if(child.classList[0] == "abs-value-container"){
+            let temp = window.getComputedStyle(child, null).getPropertyValue('font-size')
+            if(parseFloat(style) < parseFloat(temp)){
+                style = temp;
+            }
+        }
+    }
+    return style;
+}
+//Changes the height of the input box
+//Based on the biggest abs Container that is inside of it.
+function inputAbsSizing(){
+    let divInput = currentSelection.parentElement;
+    let absStyle = getBiggestAbs();
+    let biggestAbs = parseFloat(absStyle);
+    if(biggestAbs > 24){
+        let newHeight = ((biggestAbs-24)/5) * 2.5;
+         newHeight+=18;
+         newHeight += "%";
+        divInput.style.cssText="height: " + newHeight;
+    }
+    if(biggestAbs == 24){
+        divInput.style.cssText="height: 18%";
+    }
+}
+//Sizing only increase the size once,
+//So this function bubbles outwards utilizing it, 
+//Increasing the size of all the parent containers the original is inside.
+function nestedSizingIncrease(absContainer){
+    let middle = absContainer.parentElement;
+    if(middle !== null && middle.classList[0] !== "expression-container"){
+    let container = middle.parentElement;
+    sizing(container);
+        while(container.parentElement.classList[0] !== "expression-container"){
+            container = container.parentElement.parentElement;
+            sizing(container);
+        }
+    }
+}
+//If the container that is being placed has an abs container Inside of it it,
+//Increase its size based of the biggest size of its children
+function sizing(absContainer){
+    let hasAbsContainer = false;
+    let middle = absContainer.children[1];
+    let style = '24px';
+    for(let i = 0; i<middle.children.length; i++){
+        let child = middle.children[i];
+        if(child.classList[0] == "abs-value-container"){
+            hasAbsContainer=true;
+            if( parseFloat(window.getComputedStyle(child, null).getPropertyValue('font-size')) > parseFloat(style))
+            style = window.getComputedStyle(child, null).getPropertyValue('font-size');
+            
+        }
+    }
+    if(hasAbsContainer){
+        let fontsize = parseFloat(style);
+        fontsize+=5;
+        style = fontsize + "px";
+        absContainer.style.cssText = "font-size: " + style;
+        inputAbsSizing();
+    }else{
+    absContainer.style.cssText = "font-size: " + style; //So that the container will return to its size of 24px in the instance it no longer has any absContainers inside of it.
+    }
+}
+//sizingDecrease only decreases the size once,
+//So this function bubbles outwards utilizing it, 
+//Decreasing the size of all the parent containers the original is inside.
+//But only if said container is the biggest relatively
+function nestedSizingDecrease(absContainer){
+    let middle = absContainer.parentElement;
+    let container = middle.parentElement;
+    if(middle.classList[0] == "expression-container" || container.classList[0] == "expression-container")return;
+    let style = window.getComputedStyle(absContainer, null).getPropertyValue('font-size');
+    //Loops through the parent container of the parameter to see 
+    //if there are any abs value containers bigger than itself, 
+    //if so DO NOT continue onwards so that no size is decreased
+    for(let i = 0; i<middle.children.length; i++){
+        let child = middle.children[i];
+        if(child.classList[0] == "abs-value-container"){
+            if( parseFloat(window.getComputedStyle(child, null).getPropertyValue('font-size')) >= parseFloat(style) && child !== absContainer)
+            return; 
+        }
+    }
+    //So that the outermost abs container is not decreased. 
+    //Everytime ANY container is decreased.
+    //Only when there is not a biggerAbsContainer available.
+    let hasBiggerAbsContainer = biggerAbsContainer(absContainer);
+    if(hasBiggerAbsContainer == false){
+        if(container.parentElement.classList[0] == "expression-container"){
+            sizingDecrease(container);
+            
+        };
+    }
+    while(container.parentElement.classList[0] !== "expression-container"){
+        sizingDecrease(container);
+        container = container.parentElement.parentElement;
+        if(hasBiggerAbsContainer == false){
+         if(container.parentElement.classList[0] == "expression-container"){
+            sizingDecrease(container);
+         };
+        }
+    }
+}
+function sizingDecrease(absContainer){
+    let outerStyle = window.getComputedStyle(absContainer, null).getPropertyValue('font-size');
+    let fontsize = parseFloat(outerStyle);
+    fontsize-=5;
+    outerStyle = fontsize + "px"; 
+    absContainer.style.cssText = "font-size: " + outerStyle;
+    inputAbsSizing();
+}
+//return T/F if there is a bigger container, that does not hold the parameter, within the same outermost container.
+function biggerAbsContainer(absContainer){
+    let hasBiggerAbsContainer = false;
+    let outerMostContainer = absContainer.parentElement;
+    //loops through to get the container that is farthest outwards
+    while(outerMostContainer.parentElement.classList[0] !== "expression-container"){
+        outerMostContainer = outerMostContainer.parentElement;
+    }
+    let middle = outerMostContainer.children[1];
+    let outsideContainer;
+    //loops to get the container that is the outermost container of the parameter, but NOT the outerMost overall
+    for(let z = 0; z<middle.children.length; z++){
+        let child = middle.children[z];
+        if( child.contains(absContainer)){
+            outsideContainer = child;
+        }
+    }
+    let style = window.getComputedStyle(outsideContainer, null).getPropertyValue('font-size');
+    for(let i = 0; i<middle.children.length; i++){
+        let child = middle.children[i];
+        if(child.classList[0] == "abs-value-container"){
+            let isDescendent = child.contains(absContainer);
+            if( parseFloat(window.getComputedStyle(child, null).getPropertyValue('font-size')) > parseFloat(style) && isDescendent == false)
+            hasBiggerAbsContainer=true;
+        }
+    }
+    return hasBiggerAbsContainer;
 }
 function getChildren(absContainer){
     const cursor = document.querySelector(".cursor");
@@ -59,6 +205,7 @@ function absValueThere(){
         let parent = cursor.parentElement;
         let parentClass = parent.classList[0];
 
+        //When the cursor is to the right of a abs container
         let previousSibling = cursor.previousElementSibling;
             if(previousSibling !== null && previousSibling.classList[0] == "abs-value-container"){
                 let children = previousSibling.childNodes;
@@ -75,6 +222,7 @@ function absValueThere(){
             let container = parent.parentElement;
             let middleChildren = parent.childNodes;
             let lastMiddleChild = middleChildren[middleChildren.length -1];
+            //When the cursor is the last child and abs right has been "deleted"
             if(siblingClass == "abs-right-grayed" && lastMiddleChild == cursor){
                 let c = document.createElement("span");
                 c.classList.add("cursor");
@@ -87,6 +235,7 @@ function absValueThere(){
                 sibling.classList.remove("abs-right-grayed");
                 bool = true;
             }
+            //When the cursor is not the last child, but inside of an absContainer
             else if(siblingClass == "abs-right-grayed"){
                 cursorIndex = -1;
                 middleChildren.forEach( (child, index) =>{
@@ -94,6 +243,7 @@ function absValueThere(){
                         cursorIndex = index;
                     }
                 });
+                //Stores the contents after the cursor in an array then removes them from the parent container
                 let childrenArray = [];
                 for(let i = cursorIndex + 1; i < middleChildren.length; i++){
                     let temp = middleChildren[i];
@@ -101,6 +251,7 @@ function absValueThere(){
                     parent.removeChild(temp);
                     i--;
                 }
+                //Inserts the elements from the childrenarray right after the container they were in and in the same order
                 for(let i=childrenArray.length - 1; i > -1; i--){
                     container.insertAdjacentElement("afterend", childrenArray[i])
                 }
@@ -114,6 +265,10 @@ function absValueThere(){
                 let parentChildren = parent.childNodes;
                 if(parentChildren.length == 0)parent.classList.add("abs-middle-grayed");
                 bool=true;
+                //After all this is performed, calls sizing incase the container size has been altered by having abs containers inside of it
+                nestedSizingDecrease(container); //Added
+                sizing(container);
+                
             }
         }
     }
@@ -205,6 +360,8 @@ let nextElement = element.nextElementSibling;
             const right = element.childNodes[element.childNodes.length-1];
             right.classList.add("abs-right-grayed");
             absBreak = true;
+            sizing(element);
+            nestedSizingIncrease(element);
             return;
         }
         else{
@@ -237,6 +394,7 @@ const absContainer = middle.parentElement;
 const absContainerParent = absContainer.parentElement;
 
     if(middleChildren[0] == cursor){ //CHANGE THIS DO WORK IF THE CURSOR IS THE FIRST CHILD
+    nestedSizingDecrease(absContainer)
       removeContainer(cursor, absContainer);//  absContainer.insertAdjacentElement("afterend", cursor);
         absContainerParent.removeChild(absContainer);
         absBreak = true;
