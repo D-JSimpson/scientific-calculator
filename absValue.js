@@ -61,7 +61,7 @@ function inputAbsSizing(){
         divInput.style.cssText="height: 18%";
     }
 }
-//Sizing only increase the size once,
+//Sizing only increases the size once,
 //So this function bubbles outwards utilizing it, 
 //Increasing the size of all the parent containers the original is inside.
 function nestedSizingIncrease(absContainer){
@@ -169,12 +169,14 @@ function biggerAbsContainer(absContainer){
         let child = middle.children[i];
         if(child.classList[0] == "abs-value-container"){
             let isDescendent = child.contains(absContainer);
+            if(child == absContainer)return true;
             if( parseFloat(window.getComputedStyle(child, null).getPropertyValue('font-size')) > parseFloat(style) && isDescendent == false)
             hasBiggerAbsContainer=true;
         }
     }
     return hasBiggerAbsContainer;
 }
+//Encapsulates all children of the parameter abs container's parent
 function getChildren(absContainer){
     const cursor = document.querySelector(".cursor");
     let parent = cursor.parentElement;
@@ -198,6 +200,9 @@ function getChildren(absContainer){
         }
 
 }
+//Return T/F based on is there is an absValue there or not.
+//If so, perform the corresponding action.
+//If not, do nothing and let it be know there is not an abs there by returning false.
 function absValueThere(){
     const cursor = document.querySelector(".cursor");
     let bool = false;
@@ -206,6 +211,7 @@ function absValueThere(){
         let parentClass = parent.classList[0];
 
         //When the cursor is to the right of a abs container
+        //"Place" an ending bracket by removing the grayed class
         let previousSibling = cursor.previousElementSibling;
             if(previousSibling !== null && previousSibling.classList[0] == "abs-value-container"){
                 let children = previousSibling.childNodes;
@@ -216,6 +222,7 @@ function absValueThere(){
                     bool=true;
                 }
             }
+        //Inside an abs container
         if(parentClass == "abs-middle"){
             let sibling = parent.nextElementSibling;
             let siblingClass = sibling.classList[1];
@@ -223,6 +230,7 @@ function absValueThere(){
             let middleChildren = parent.childNodes;
             let lastMiddleChild = middleChildren[middleChildren.length -1];
             //When the cursor is the last child and abs right has been "deleted"
+            //"place" an abs ending bracket and then move the cursor outside.
             if(siblingClass == "abs-right-grayed" && lastMiddleChild == cursor){
                 let c = document.createElement("span");
                 c.classList.add("cursor");
@@ -236,6 +244,7 @@ function absValueThere(){
                 bool = true;
             }
             //When the cursor is not the last child, but inside of an absContainer
+            //Pushes the elements from the cursor (inclusive) outside of the parent abs Container
             else if(siblingClass == "abs-right-grayed"){
                 cursorIndex = -1;
                 middleChildren.forEach( (child, index) =>{
@@ -337,6 +346,9 @@ let nextElement = element.nextElementSibling;
     if(nextElement.classList[0] == "cursor"){
         let siblingAfter = nextElement.nextElementSibling;
         let parent = cursor.parentElement;
+        //Stores the elements from the cursor (inclusive)
+        //And places it into the container that
+        //has it right ending bracket "deleted"
         if(siblingAfter !== null){
             let children = cursor.parentElement.childNodes;
             const middle = element.childNodes[1];
@@ -364,6 +376,8 @@ let nextElement = element.nextElementSibling;
             nestedSizingIncrease(element);
             return;
         }
+        //On the outside and right next to the end
+        //"deletes" ending bracket by graying it out
         else{
         const right = element.childNodes[element.childNodes.length-1];
         right.classList.add("abs-right-grayed");
@@ -376,31 +390,18 @@ let nextElement = element.nextElementSibling;
   }
 }
 //Inside container
-//   let hasCursor = false;
-//     const middle = element.childNodes[1];
-//     const middleChildren = middle.childNodes;
-    
-//     let index;
-//     for(i=0; i<middleChildren.length; i++){
-//         let e = middleChildren[i];
-//         if(e.classList[0] == "cursor"){
-//             index = i-1;
-//             hasCursor = true;
-//         }
-//     }
 const middle = cursor.parentElement;
 const middleChildren = middle.childNodes;
 const absContainer = middle.parentElement;
 const absContainerParent = absContainer.parentElement;
 
-    if(middleChildren[0] == cursor){ //CHANGE THIS DO WORK IF THE CURSOR IS THE FIRST CHILD
+    if(middleChildren[0] == cursor){ 
     nestedSizingDecrease(absContainer)
-      removeContainer(cursor, absContainer);//  absContainer.insertAdjacentElement("afterend", cursor);
+      removeContainer(cursor, absContainer);
         absContainerParent.removeChild(absContainer);
         absBreak = true;
         return;
     }
-   // let exp = middleChildren[index];
     let previous = cursor.previousElementSibling;
     if (previous !== null)middle.removeChild(previous);
     clearInterval(blinkIntervalID);
@@ -409,20 +410,17 @@ const absContainerParent = absContainer.parentElement;
 function absValueUpdateCursorAfterBacksapce(element, cursor){
     const middle = element.childNodes[1];
     const middleChildren = middle.childNodes;
-    // let cursor = document.createElement("span");
-    //     cursor.classList.add("cursor");
-    //     cursor.classList.add("blink");
     if(middleChildren.length == 0){
         middle.insertAdjacentElement("afterbegin", cursor);
         middle.classList.remove("abs-middle-grayed");
-      //  containerCursorBlink(cursor);
     }
     else{
         let lastChild = middleChildren[middleChildren.length-1];
         lastChild.insertAdjacentElement("afterend", cursor);
-      //  containerCursorBlink(cursor);
     }
 }
+//Places the children elements of the removed container.
+//Inside its parent element.
 function removeContainer(cursor, absContainer){
     let parent = cursor.parentElement;
     let parentChildren = parent.childNodes;
