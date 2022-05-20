@@ -115,6 +115,7 @@ function updateCursor(pos){
     if(cursor !== undefined){
         let parent = cursor.parentElement;
         parent.removeChild(cursor);
+        clearInterval(blinkIntervalID);
     }
 
       let funcBreak = false;
@@ -126,6 +127,9 @@ function updateCursor(pos){
                   absValueUpdateCursor(pos);
                   funcBreak = true;
                   break;
+              case "division-container":
+                  divisionUpdateCursor(pos);
+                  funcBreak = true;
               default:
                   break;
           }
@@ -244,7 +248,6 @@ body.addEventListener("keydown", function(event){
 body.addEventListener("click", function(){selectNone();});
 function selectNone(){
     const positionGrab = Array.from(document.querySelectorAll( ":hover" ));
-    console.log(positionGrab);
     let lastChild = positionGrab[positionGrab.length-1];
     if(lastChild.tagName == "BODY")deselectOtherFields();
 }
