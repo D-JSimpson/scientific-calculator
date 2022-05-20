@@ -138,6 +138,8 @@ function updateCursor(pos){
 let absBreak = false;
 function backSpace(){
     let cursor = getCursor(currentSelection);
+    //Nothing Selected
+    if(cursor == undefined)return;
     let previous = cursor.previousElementSibling;
     if(previous !== null){
         let previousClass = previous.classList[0];
@@ -168,6 +170,8 @@ function backSpace(){
 }
 function insertAtCursor(key){
     let cursor = getCursor(currentSelection);
+    //Nothing Selected
+    if(cursor == undefined)return;
     cursor.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
     clearInterval(blinkIntervalID);
     cursorBlink();
@@ -184,6 +188,14 @@ body.addEventListener("keydown", function(event){
         }
     }
 });
+
+body.addEventListener("click", function(){selectNone();});
+function selectNone(){
+    const positionGrab = Array.from(document.querySelectorAll( ":hover" ));
+    console.log(positionGrab);
+    let lastChild = positionGrab[positionGrab.length-1];
+    if(lastChild.tagName == "BODY")deselectOtherFields();
+}
 
 //When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
