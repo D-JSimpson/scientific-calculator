@@ -70,6 +70,15 @@ function cursorToStart(){
     firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
 }
+function cursorToEnd(){
+    let cursor = document.createElement("span");
+        cursor.classList.add("cursor");
+        cursor.classList.add("blink");
+    currentSelection.insertAdjacentElement("beforeend", cursor);
+    cursorBlink();
+    let input = currentSelection.parentElement;
+    input.classList.add("display-border");
+}
 //This is not needed. 
 //As I have come to realize,
 //This is just reinventing querySelector.
@@ -135,8 +144,39 @@ function updateCursor(pos){
    }
     cursorBlink();
 }
+//Will delete the selected field, but only if it is empty
+function deleteField(){
+    let empty = isFieldEmpty();
+    if(empty){
+        let input = currentSelection.parentElement;
+        let container = input.parentElement;
+        let previous = input.previousElementSibling;
+        let next = input.nextElementSibling;
+        //If there are no other sibling elements do nothing.
+        if(previous == null && next == null)return false;
+        container.removeChild(input);
+        clearInterval(blinkIntervalID);
+        //Selects another field now that the input field is deleted. 
+        if(previous !== null){
+            let children = previous.children;
+            let newInput = children[1];
+            currentSelection = newInput;
+            cursorToEnd();
+        }else if(next !== null){
+            let children = next.children;
+            let newInput = children[1];
+            currentSelection = newInput;
+            cursorToEnd();
+        }
+        return true;
+    }
+    return false;
+}
 let absBreak = false;
 function backSpace(){
+    let exit = deleteField();
+    if(exit)return;
+     
     let cursor = getCursor(currentSelection);
     //Nothing Selected
     if(cursor == undefined)return;
@@ -199,7 +239,19 @@ function selectNone(){
 
 //When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
-enterButton.addEventListener('click', function(){createInputField();});
+enterButton.addEventListener('click', function(){
+    let empty = isFieldEmpty();
+    if(empty == false)
+    createInputField();
+});
+//Return T/F, so that Enter button
+//Does thing if field is empty
+//Not including the cursor
+function isFieldEmpty(){
+    let count = currentSelection.childElementCount;
+    if(count == 1)return true;
+    return false;
+}
 function createInputField(){
     let div = document.createElement("div");
     div.addEventListener("mouseenter", function(){this.style.cursor="text"}); //To let user know they can click
