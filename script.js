@@ -70,6 +70,10 @@ function cursorToStart(){
     firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
 }
+//This is not needed. 
+//As I have come to realize,
+//This is just reinventing querySelector.
+//But I think the mistake is hilarious so I am leaving it.
 function recursiveCall(e){
     if(e.classList[0] == "cursor"){
       return e;
@@ -98,19 +102,6 @@ function recursiveCall(e){
   
   }
 function updateCursor(pos){
-    // const expressionChildren = currentSelection.childNodes;
-    //  expressionChildren.forEach( (exp)=>{
-    //       if(exp.classList[0] == "cursor"){
-    //           currentSelection.removeChild(exp);
-    //       }
-    //     switch (exp.classList[0]){
-    //         case "abs-value-container":
-    //             absValueRemoveCursor(exp);
-    //             break;
-    //         default:
-    //             break;
-    //      }
-    //   });
     let cursor = getCursor(currentSelection);
     if(cursor !== undefined){
         let parent = cursor.parentElement;
@@ -146,7 +137,6 @@ function updateCursor(pos){
 }
 let absBreak = false;
 function backSpace(){
-    const expressionChildren = currentSelection.childNodes;
     let cursor = getCursor(currentSelection);
     let previous = cursor.previousElementSibling;
     if(previous !== null){
@@ -170,7 +160,6 @@ function backSpace(){
                   break;
     }
     if(absBreak == true){absBreak = false; return};
-    //let exp = expressionChildren[index];
     if(previous == null)return;
     let parent = previous.parentElement
     if(previous !== null && parent !== null) parent.removeChild(previous);
@@ -178,7 +167,6 @@ function backSpace(){
     cursorBlink();
 }
 function insertAtCursor(key){
-    const expressionChildren = Array.from(currentSelection.childNodes);
     let cursor = getCursor(currentSelection);
     cursor.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
     clearInterval(blinkIntervalID);
