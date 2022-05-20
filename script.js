@@ -14,51 +14,23 @@ firstDivInput.addEventListener("mouseenter", function(){this.style.cursor="text"
 firstDivInput.addEventListener("click", function(){selectField(this)});
 selectField(firstDivInput);
 function selectField(input){
-    let children = input.childNodes;
-    currentSelection = children[3];
+    let children = input.children;
     deselectOtherFields();
+    currentSelection = children[1];
     cursorInBetween(); 
     input.classList.add("display-border");
 }
 function deselectOtherFields(){
-    let displayChildren = [];
-    let dCPH = Array.from(userInputDisplayContainer.childNodes);
-    dCPH.forEach( (e) =>{
-        if(e.tagName == "DIV"){
-            displayChildren.push(e);
-        }
-    });
-    let divInputChildren = [];
-    displayChildren.forEach( (e) =>{
-        let dIPH = [];
-        e.childNodes.forEach( (q) =>{
-            if(q.tagName == "SPAN"){
-                dIPH.push(q);
-            }
-        });
-        dIPH.forEach( (el) => {
-            if(el.classList[0] == "expression-container" && el !== currentSelection){ 
-                divInputChildren.push(el);
-            }
-        });
-    });
-    
-    divInputChildren.forEach( (e) =>{
-        e.parentNode.classList.remove("display-border");
-        let children = e.childNodes;
-        children.forEach( (el) =>{
-            if(el.classList[0] == "cursor"){
-                e.removeChild(el);
-            }
-        });
-    });
+    let cursor = document.querySelector(".cursor");
+    if(cursor !== null){
+    currentSelection.parentElement.classList.remove("display-border");
+    let parent = cursor.parentElement;
+    parent.removeChild(cursor);
+    }
 };
 //controls the cursor when it is inbetween elements
 function cursorInBetween(){
-    const expressionChildren = currentSelection.childNodes;   
-    if(expressionChildren[0].nodeName == "#text"){
-        expressionChildren[0].remove();
-    }                                                                                       
+    const expressionChildren = currentSelection.children;                                                                                     
     if(expressionChildren.length == 0){updateCursor();} //When the field is empty
     else{
         let place = getPositionElement();
@@ -93,7 +65,7 @@ function cursorBlinkTime(c){
     setTimeout( () =>{c.classList.toggle("blink")}, 500);
 }
 function cursorToStart(){
-    const expressionChildren = currentSelection.childNodes;
+    const expressionChildren = currentSelection.children;
     let firstChild = expressionChildren[0];
     firstChild.insertAdjacentHTML("beforebegin", "<span class='cursor blink'></span>");
 
@@ -197,23 +169,6 @@ function backSpace(){
               default:
                   break;
     }
-    
-    // let index;
-    // expressionChildren.forEach( (exp, ind)=>{
-    //     let nodeClass = exp.classList[0];
-        
-    //     if(nodeClass == "cursor"){
-    //         index = ind-1;
-    //     }
-    //     switch (nodeClass){
-    //           case "abs-value-container":
-    //               absValueBackspace(exp);
-    //               break;
-    //           default:
-    //               break;
-    //     }
-       
-    // });
     if(absBreak == true){absBreak = false; return};
     //let exp = expressionChildren[index];
     if(previous == null)return;
@@ -224,18 +179,8 @@ function backSpace(){
 }
 function insertAtCursor(key){
     const expressionChildren = Array.from(currentSelection.childNodes);
-    //console.log(expressionChildren);
     let cursor = getCursor(currentSelection);
     cursor.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
-    // for(i=0; i< expressionChildren.length; i++){
-    //     let exp = expressionChildren[i];
-    //    // console.log(exp.classList[0]);
-    //     if(exp.classList[0] !== "digit" && exp.classList[0] !== "cursor"){absValueCursorCheck(exp, key); keepCursorPosition = true;}
-    //     if(exp.classList[0] == "cursor"){
-    //         exp.insertAdjacentHTML("beforebegin", "<span class='digit'>" + key + "</span>");
-    //         break;
-    //     }
-    // }
     clearInterval(blinkIntervalID);
     cursorBlink();
 }
@@ -248,33 +193,9 @@ body.addEventListener("keydown", function(event){
             backSpace();
         }else{
             insertAtCursor(event.key);
-            // if(keepCursorPosition == false)
-            // {
-            // updateCursor();
-            // }
         }
     }
 });
-
-
-//the display field will track the users position with the field
-// const userInputField = document.getElementById('first-input');
-// let currentInputField;
-// userInputField.addEventListener('keyup', e => {
-//     let currentPosition = e.target.selectionStart;
-//  console.log("the cursor is at: ", currentPosition);
-// });
-// userInputField.addEventListener('click', e => {
-//     let currentPosition = e.target.selectionStart;
-//     console.log("the cursor is at: ", currentPosition);
-// });
-// userInputField.addEventListener("focusin", e =>{
-//     currentInputField = e.target;
-// });
-// userInputField.addEventListener("focusout", e =>{
-//     currentInputField = undefined;
-// });
-// userInputField.onkeydown = function(event){return checkUserKey(event)};
 
 //When the user presses enter and the calculations run, a new box will appear with all the functions of the starting input field
 const enterButton = document.getElementById('enter-button');
@@ -291,13 +212,7 @@ function createInputField(){
     div.classList.add("user-input-display");
     div.appendChild(startSpan);
     div.appendChild(expressionSpan);
-    div.addEventListener("click", function(){
-        let children = this.childNodes;
-        currentSelection = children[1];
-        deselectOtherFields();
-        cursorInBetween(); 
-        div.classList.add("display-border")
-    });
+    div.addEventListener("click", function(){selectField(this)});
     userInputDisplayContainer.appendChild(div);
     userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
 }
