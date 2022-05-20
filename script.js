@@ -217,13 +217,25 @@ function insertAtCursor(key){
     cursorBlink();
 }
 body.addEventListener("keydown", function(event){
-    if(event.key == "|"){
-        absValueCreator();
+    let multBreak = false;
+    switch(event.key){
+        case "|":
+            absValueCreator();
+            break;
+        case "*":
+            insertAtCursor("·");
+            multBreak = true;
+            break;
+        case "/":
+            break;
+        default:
+            break;
     }
     if(checkUserKey(event)){
         if(event.key == "Backspace"){
             backSpace();
         }else{
+            if(multBreak == true)return;
             insertAtCursor(event.key);
         }
     }
@@ -371,7 +383,8 @@ window.addEventListener("mouseup", function(){
 //Limit the users input to just numbers and some other things
 function checkUserKey(event){
     let char = event.keyCode;
-    if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173 || char == 191){
+    console.log(char);
+    if(char > 31 && char < 58 || char == 8 || char == 61 || char == 173){
         return true;
     }
     return false;
