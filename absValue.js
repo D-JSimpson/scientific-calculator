@@ -169,7 +169,6 @@ function biggerAbsContainer(absContainer){
         let child = middle.children[i];
         if(child.classList[0] == "abs-value-container"){
             let isDescendent = child.contains(absContainer);
-            if(child == absContainer)return true;
             if( parseFloat(window.getComputedStyle(child, null).getPropertyValue('font-size')) > parseFloat(style) && isDescendent == false)
             hasBiggerAbsContainer=true;
         }
@@ -183,7 +182,7 @@ function getChildren(absContainer){
     let parentChildren = parent.childNodes;
     let cursorIndex = -1;
     parentChildren.forEach( (child, index) =>{
-        if(child.classList[0] == "cursor"){
+        if(child == cursor){
             cursorIndex = index;
         }
     });
@@ -275,7 +274,7 @@ function absValueThere(){
                 if(parentChildren.length == 0)parent.classList.add("abs-middle-grayed");
                 bool=true;
                 //After all this is performed, calls sizing incase the container size has been altered by having abs containers inside of it
-                nestedSizingDecrease(container); //Added
+                //Added
                 sizing(container);
                 
             }
@@ -354,7 +353,7 @@ let nextElement = element.nextElementSibling;
             const middle = element.childNodes[1];
             cursorIndex = -1;
                 children.forEach( (child, index) =>{
-                    if(child.classList[0] == "cursor"){
+                    if(child == cursor){
                         cursorIndex = index;
                     }
                 });
