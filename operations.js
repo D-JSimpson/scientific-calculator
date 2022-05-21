@@ -1,3 +1,25 @@
+const fractionButton = document.getElementById("fraction-btn");
+fractionButton.addEventListener("click", function(){fractionCreator();});
+function fractionCreator(){
+    let divisionContainer = document.createElement("span");
+        divisionContainer.classList.add("division-container");
+    let numerator = document.createElement("span");
+        numerator.classList.add("numerator");
+        numerator.classList.add("division-grayed");
+    let denominator = document.createElement("span");
+        denominator.classList.add("denominator");
+        denominator.classList.add("division-grayed");
+    divisionContainer.appendChild(numerator);
+    divisionContainer.appendChild(denominator);
+    const cursor = document.querySelector(".cursor");
+    if(cursor !== null){
+        let parent = cursor.parentElement;
+        cursor.insertAdjacentElement("afterend", divisionContainer);
+        parent.removeChild(cursor);
+        clearInterval(blinkIntervalID);
+        divisionUpdateCursor(divisionContainer.children[0]);
+    }
+}
 //Intended Functionality
 //--------------------
 //The division operator loops through its parent element
@@ -35,10 +57,14 @@ function operationInsertAtCursor(operator){
     cursorBlink();
 }
 //Only if empty
-function divisionUpdateCursor(pos){
+function divisionUpdateCursor(pos, place){
     if(pos.classList[0] == "numerator" || pos.classList[0] == "denominator"){
         centerDivisionText(pos);
-        pos.insertAdjacentHTML("beforeend", "<span class='cursor blink'></span>");
+        if(place == "beforeend"){
+            pos.insertAdjacentHTML("beforeend", "<span class='cursor blink'></span>");
+        }else{
+        pos.insertAdjacentHTML("afterbegin", "<span class='cursor blink'></span>");
+        }
         pos.classList.remove("division-grayed");
         cursorBlink();
     }
@@ -68,11 +94,8 @@ function divisionOutsideBackspace(element, cursor){
     let denominator = children[1];
     cursor.parentElement.removeChild(cursor);
     clearInterval(blinkIntervalID);
-    divisionUpdateCursor(denominator);
+    divisionUpdateCursor(denominator, "beforeend");
     divisionBreak = true;
-}
-function divisionInsideBackspace(cursor){
-
 }
 function divisionEmpty(element){
     let children = element.children;
@@ -81,4 +104,58 @@ function divisionEmpty(element){
         return true;
     }
     return false;
+}
+function divisionInsideBackspace(element){
+
+    let parentOfFraction = element.parentElement;
+    let numerator = element.children[0];
+    let denominator = element.children[1];
+    if(numerator.childElementCount == 1){
+        if(childIsCursor(numerator.children[0]))
+        removeDivisionContainer(parentOfFraction, element, denominator);
+    }
+    if(denominator.childElementCount == 1){
+        if(childIsCursor(denominator.children[0]))
+        removeDivisionContainer(parentOfFraction, element, numerator);
+    }
+
+}
+function removeDivisionContainer(container, fraction, element){
+    let children = Array.from(container.children);
+    let index = -1;
+    children.forEach( (child, indx) =>{
+        if(child == fraction){
+            index = indx
+        }
+    });
+    let childrenArray = [];
+    let elementChildren = element.children;
+    for(let i = 0; i < elementChildren.length; i++){
+        let temp = elementChildren[i];
+        childrenArray.push(temp);
+    }
+    let previous = children[index-1];
+    if(previous !== null && previous !== undefined)
+    {
+        placeFromFraction(previous, childrenArray, "afterend");
+    }
+    else
+    {
+        placeFromFraction(container, childrenArray, "afterbegin");
+    }
+    container.removeChild(fraction);
+}
+function childIsCursor(element){
+    if(element.classList[0] == "cursor")
+        return true;
+    return false;
+}
+function placeFromFraction(element, arr, place){
+    element.insertAdjacentHTML("" + place, "<span class='cursor blink'></span>");
+    clearInterval(blinkIntervalID);
+    cursorBlink();
+    for(let i = arr.length - 1; i >=0; i--){
+        let temp = arr[i]
+        element.insertAdjacentElement("" + place, temp);
+    }
 }

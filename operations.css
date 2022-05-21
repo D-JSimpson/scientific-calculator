@@ -6,6 +6,7 @@
     height: 100%;
     margin-right: 3px;
     margin-left: 3px;
+    font-size: 85%;
 }
 .numerator,
 .denominator{
@@ -15,7 +16,7 @@
     height: 30px;
     min-width: 1.25vw;
     box-sizing: border-box;
-    padding-left:2px;
+    padding-left:3px;
     /* justify-content: center; */
 }
 .denominator{

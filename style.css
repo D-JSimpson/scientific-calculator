@@ -192,7 +192,7 @@ transform: translateX(0.6em) translateY(-1em);
   padding-top: 0.3em;
   margin-left: -0.1em;
 }
-.division-container{
+#fraction-btn{
   display: flex;
   flex-direction: column;
   align-items: center;
