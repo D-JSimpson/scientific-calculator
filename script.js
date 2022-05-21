@@ -289,7 +289,9 @@ function createInputField(){
     div.appendChild(startSpan);
     div.appendChild(expressionSpan);
     div.addEventListener("click", function(){selectField(this)});
-    userInputDisplayContainer.appendChild(div);
+    let input = currentSelection.parentElement;
+    input.insertAdjacentElement("afterend", div);
+    selectField(div);
     userInputDisplayContainer.scrollTop = userInputDisplayContainer.scrollHeight - userInputDisplayContainer.clientHeight; //force scroldbar to the bottom
 }
 
