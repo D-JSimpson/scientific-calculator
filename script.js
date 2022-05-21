@@ -15,8 +15,10 @@ firstDivInput.addEventListener("click", function(){selectField(this)});
 selectField(firstDivInput);
 function selectField(input){
     let children = input.children;
+    if(currentSelection !== children[1]){
     deselectOtherFields();
     currentSelection = children[1];
+    }
     cursorInBetween(); 
     input.classList.add("display-border");
 }
@@ -116,6 +118,7 @@ function updateCursor(pos){
         let parent = cursor.parentElement;
         parent.removeChild(cursor);
         clearInterval(blinkIntervalID);
+        if(parent.classList[0] == "numerator" || parent.classList[0] == "denominator")divisionGrayed(parent);
     }
 
       let funcBreak = false;
@@ -221,16 +224,22 @@ function insertAtCursor(key){
     cursorBlink();
 }
 body.addEventListener("keydown", function(event){
-    let multBreak = false;
+    let operationBreak = false;
     switch(event.key){
         case "|":
             absValueCreator();
             break;
-        case "*":
-            insertAtCursor("·");
-            multBreak = true;
-            break;
         case "/":
+            //divisionCreator();
+            break;
+        case "*":
+            operationInsertAtCursor("·");
+            operationBreak = true;
+            break;
+        case "+":
+        case "-":
+            operationInsertAtCursor("" + event.key);
+            operationBreak = true;
             break;
         default:
             break;
@@ -239,7 +248,7 @@ body.addEventListener("keydown", function(event){
         if(event.key == "Backspace"){
             backSpace();
         }else{
-            if(multBreak == true)return;
+            if(operationBreak == true)return;
             insertAtCursor(event.key);
         }
     }

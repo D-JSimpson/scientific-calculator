@@ -11,19 +11,38 @@ function divisionCreator(){
         divisionContainer.classList.add("division-container");
     let numerator = document.createElement("span");
         numerator.classList.add("numerator");
+        numerator.classList.add("division-grayed");
     let denominator = document.createElement("span");
         denominator.classList.add("denominator");
+        denominator.classList.add("division-grayed");
     divisionContainer.appendChild(numerator);
     divisionContainer.appendChild(denominator);
     const cursor = document.querySelector(".cursor");
-    cursor.insertAdjacentElement("afterend", divisionContainer);
-    console.log("hi")
+    if(cursor !== null){
+        let parent = cursor.parentElement;
+        cursor.insertAdjacentElement("afterend", divisionContainer);
+        parent.removeChild(cursor);
+        clearInterval(blinkIntervalID);
+        divisionUpdateCursor(divisionContainer.children[0]);
+    }
+}
+function operationInsertAtCursor(operator){
+    let cursor = getCursor(currentSelection);
+    //Nothing Selected
+    if(cursor == undefined)return;
+    cursor.insertAdjacentHTML("beforebegin", "<span class='operator'>" + operator + "</span>");
+    clearInterval(blinkIntervalID);
+    cursorBlink();
 }
 //Only if empty
 function divisionUpdateCursor(pos){
     if(pos.classList[0] == "numerator" || pos.classList[0] == "denominator"){
         pos.insertAdjacentHTML("afterbegin", "<span class='cursor blink'></span>");
+        pos.classList.remove("division-grayed");
         cursorBlink();
     }
-
+}
+function divisionGrayed(pos){
+    if(pos.childElementCount == 0)
+    pos.classList.add("division-grayed");
 }
