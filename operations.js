@@ -42,10 +42,39 @@ function divisionCreator(){
     const cursor = document.querySelector(".cursor");
     if(cursor !== null){
         let parent = cursor.parentElement;
+        getChildrenForDivision(divisionContainer);
         cursor.insertAdjacentElement("afterend", divisionContainer);
         parent.removeChild(cursor);
         clearInterval(blinkIntervalID);
+        if(numerator.childElementCount > 0){
+            divisionUpdateCursor(divisionContainer.children[1]);
+            numerator.classList.remove("division-grayed");
+        }else{
         divisionUpdateCursor(divisionContainer.children[0]);
+        }
+        
+    }
+}
+function getChildrenForDivision(divisionContainer){
+    const cursor = document.querySelector(".cursor");
+    let parent = cursor.parentElement;
+    let parentChildren = parent.childNodes;
+    let cursorIndex = -1;
+    parentChildren.forEach( (child, index) =>{
+        if(child == cursor){
+            cursorIndex = index;
+        }
+    });
+    let childrenArray = [];
+    let numerator = divisionContainer.children[0];
+    for(let i = cursorIndex-1; i > 0; i--){
+        let temp = parentChildren[i];
+        if(temp.classList[0] == "operator")break;
+        childrenArray.push(temp);
+        parent.removeChild(temp);
+    }
+    for(let i=0; i < childrenArray.length; i++){
+        numerator.insertAdjacentElement("afterbegin", childrenArray[i])
     }
 }
 function operationInsertAtCursor(operator){
