@@ -180,6 +180,7 @@ function deleteField(){
     return false;
 }
 let absBreak = false;
+let divisionBreak = false;
 function backSpace(){
     let exit = deleteField();
     if(exit)return;
@@ -194,19 +195,26 @@ function backSpace(){
             case "abs-value-container":
                 absValueBackspace(previous, cursor);
                 break;
+            case "division-container":
+                divisionOutsideBackspace(previous, cursor);
             default:
                 break;
         }
     }
-    if(absBreak == true){absBreak = false; return};
+    if(absBreak == true){absBreak = false; return;}
+    if(divisionBreak == true){divisionBreak = false; return;}
     let cursorParent = cursor.parentElement;
     let cursorParentClass = cursorParent.classList[0];
     switch(cursorParentClass){
         case "abs-middle":
-                  absValueBackspace(null, cursor);
-                  break;
-              default:
-                  break;
+            absValueBackspace(null, cursor);
+            break;
+        case "numerator":
+        case "denominator":
+            divisionInsideBackspace(cursor)
+            break;
+        default:
+            break;
     }
     if(absBreak == true){absBreak = false; return};
     if(previous == null)return;

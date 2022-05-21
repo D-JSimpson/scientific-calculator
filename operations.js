@@ -38,7 +38,7 @@ function operationInsertAtCursor(operator){
 function divisionUpdateCursor(pos){
     if(pos.classList[0] == "numerator" || pos.classList[0] == "denominator"){
         centerDivisionText(pos);
-        pos.insertAdjacentHTML("afterbegin", "<span class='cursor blink'></span>");
+        pos.insertAdjacentHTML("beforeend", "<span class='cursor blink'></span>");
         pos.classList.remove("division-grayed");
         cursorBlink();
     }
@@ -59,4 +59,26 @@ function centerDivisionText(pos){
         children[0].style.justifyContent = "start";
         children[1].style.justifyContent = "start";
     }
+}
+function divisionOutsideBackspace(element, cursor){
+    let empty = divisionEmpty(element);
+    if(empty)return;
+
+    let children = element.children;
+    let denominator = children[1];
+    cursor.parentElement.removeChild(cursor);
+    clearInterval(blinkIntervalID);
+    divisionUpdateCursor(denominator);
+    divisionBreak = true;
+}
+function divisionInsideBackspace(cursor){
+
+}
+function divisionEmpty(element){
+    let children = element.children;
+    if(children[0].childElementCount == 0 && children[1].childElementCount == 0)
+    {
+        return true;
+    }
+    return false;
 }
