@@ -211,7 +211,7 @@ function backSpace(){
             break;
         case "numerator":
         case "denominator":
-            divisionInsideBackspace(cursorParent.parentElement)
+            divisionInsideBackspace(cursorParent.parentElement, cursor)
             break;
         default:
             break;

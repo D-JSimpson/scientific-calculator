@@ -58,7 +58,7 @@ function divisionCreator(){
 function getChildrenForDivision(divisionContainer){
     const cursor = document.querySelector(".cursor");
     let parent = cursor.parentElement;
-    let parentChildren = parent.childNodes;
+    let parentChildren = Array.from(parent.children);
     let cursorIndex = -1;
     parentChildren.forEach( (child, index) =>{
         if(child == cursor){
@@ -66,9 +66,8 @@ function getChildrenForDivision(divisionContainer){
         }
     });
     let childrenArray = [];
-    parentChildren = Array.from(parent.childNodes);
     let numerator = divisionContainer.children[0];
-    for(let i = cursorIndex-1; i > 0; i--){
+    for(let i = cursorIndex-1; i > -1; i--){
         let temp = parentChildren[i];
         if(temp.classList[0] == "operator")break;
         childrenArray.push(temp);
@@ -135,18 +134,28 @@ function divisionEmpty(element){
     }
     return false;
 }
-function divisionInsideBackspace(element){
+function divisionInsideBackspace(element, cursor){
 
     let parentOfFraction = element.parentElement;
     let numerator = element.children[0];
     let denominator = element.children[1];
+
+    if(numerator.children[0] == cursor || denominator.children[0] == cursor){
+        removeDivisionContainer(parentOfFraction, element, numerator);
+        removeDivisionContainer(parentOfFraction, element, denominator);
+        parentOfFraction.removeChild(element);
+        return;
+    }
+
     if(numerator.childElementCount == 1){
         if(childIsCursor(numerator.children[0]))
         removeDivisionContainer(parentOfFraction, element, denominator);
+        parentOfFraction.removeChild(element);
     }
     if(denominator.childElementCount == 1){
         if(childIsCursor(denominator.children[0]))
         removeDivisionContainer(parentOfFraction, element, numerator);
+        parentOfFraction.removeChild(element);
     }
 
 }
@@ -173,7 +182,6 @@ function removeDivisionContainer(container, fraction, element){
     {
         placeFromFraction(container, childrenArray, "afterbegin");
     }
-    container.removeChild(fraction);
 }
 function childIsCursor(element){
     if(element.classList[0] == "cursor")
@@ -181,7 +189,6 @@ function childIsCursor(element){
     return false;
 }
 function placeFromFraction(element, arr, place){
-    element.insertAdjacentHTML("" + place, "<span class='cursor blink'></span>");
     clearInterval(blinkIntervalID);
     cursorBlink();
     for(let i = arr.length - 1; i >=0; i--){
