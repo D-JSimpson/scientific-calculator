@@ -37,6 +37,7 @@ function operationInsertAtCursor(operator){
 //Only if empty
 function divisionUpdateCursor(pos){
     if(pos.classList[0] == "numerator" || pos.classList[0] == "denominator"){
+        centerDivisionText(pos);
         pos.insertAdjacentHTML("afterbegin", "<span class='cursor blink'></span>");
         pos.classList.remove("division-grayed");
         cursorBlink();
@@ -45,4 +46,17 @@ function divisionUpdateCursor(pos){
 function divisionGrayed(pos){
     if(pos.childElementCount == 0)
     pos.classList.add("division-grayed");
+}
+function centerDivisionText(pos){
+    let parent = pos.parentElement;
+    let children = parent.children;
+    if(children[0].childElementCount > 0 || children[1].childElementCount > 0){
+        children[0].style.justifyContent = "center";
+        children[1].style.justifyContent = "center";
+    }
+    else
+    {
+        children[0].style.justifyContent = "start";
+        children[1].style.justifyContent = "start";
+    }
 }
