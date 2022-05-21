@@ -66,6 +66,7 @@ function getChildrenForDivision(divisionContainer){
         }
     });
     let childrenArray = [];
+    parentChildren = Array.from(parent.childNodes);
     let numerator = divisionContainer.children[0];
     for(let i = cursorIndex-1; i > 0; i--){
         let temp = parentChildren[i];
