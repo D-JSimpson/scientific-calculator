@@ -85,7 +85,6 @@ function operationInsertAtCursor(operator){
     clearInterval(blinkIntervalID);
     cursorBlink();
 }
-//Only if empty
 function divisionUpdateCursor(pos, place){
     if(pos.classList[0] == "numerator" || pos.classList[0] == "denominator"){
         centerDivisionText(pos);
@@ -148,14 +147,16 @@ function divisionInsideBackspace(element, cursor){
     }
 
     if(numerator.childElementCount == 1){
-        if(childIsCursor(numerator.children[0]))
+        if(childIsCursor(numerator.children[0])){
         removeDivisionContainer(parentOfFraction, element, denominator);
         parentOfFraction.removeChild(element);
+        }
     }
     if(denominator.childElementCount == 1){
-        if(childIsCursor(denominator.children[0]))
+        if(childIsCursor(denominator.children[0])){
         removeDivisionContainer(parentOfFraction, element, numerator);
         parentOfFraction.removeChild(element);
+        }
     }
 
 }
